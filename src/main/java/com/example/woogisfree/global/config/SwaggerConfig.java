@@ -18,7 +18,7 @@ public class SwaggerConfig {
 
     public Info apiInfo() {
         return new Info()
-                .title("Woogis Toy")
+                .title("Woogie's Toy")
                 .version("1.0.0");
     }
 }
