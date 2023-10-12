@@ -11,5 +11,6 @@ public class Board {
     @Id
     @Column(name = "board_id")
     private Long id;
-
+    private String title;
+    private String content;
 }

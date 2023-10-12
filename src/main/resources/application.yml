@@ -8,7 +8,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: test
-#jpa
+  #jpa
   jpa:
     show-sql: true
     hibernate:
@@ -19,3 +19,13 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+#swagger
+springdoc:
+  packages-to-scan: com.example.woogisfree
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
