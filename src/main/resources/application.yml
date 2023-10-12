@@ -15,6 +15,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        highlight_sql: true
         format_sql: true
         jdbc:
           lob:
