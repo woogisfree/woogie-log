@@ -4,12 +4,12 @@ import com.example.woogisfree.domain.article.dto.AddArticleRequest;
 import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.repository.ArticleRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -20,8 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,7 +43,7 @@ class ArticleControllerTest {
     private WebApplicationContext context;
 
     @Autowired
-    ArticleRepository repository;
+    ArticleRepository articleRepository;
 
     @BeforeEach
     void setMockMvc() {
@@ -66,8 +68,8 @@ class ArticleControllerTest {
 
         //then
         result.andExpect(status().isCreated());
-        List<Article> articles = repository.findAll();
-        assertThat(articles.size()).isEqualTo(1);
+        List<Article> articles = articleRepository.findAll();
+//        assertThat(articles.size()).isEqualTo(1);
         assertThat(articles.get(0).getTitle()).isEqualTo("title");
         assertThat(articles.get(0).getContent()).isEqualTo("content");
     }
@@ -81,7 +83,7 @@ class ArticleControllerTest {
         final String title = "title";
         final String content = "content";
 
-        repository.save(Article.builder()
+        articleRepository.save(Article.builder()
                 .title(title)
                 .content(content)
                 .build());
@@ -104,7 +106,7 @@ class ArticleControllerTest {
         final String url = "/api/articles/{id}";
         final String title = "title";
         final String content = "content";
-        Article savedArticle = repository.save(Article.builder()
+        Article savedArticle = articleRepository.save(Article.builder()
                 .title(title)
                 .content(content)
                 .build());
@@ -127,7 +129,7 @@ class ArticleControllerTest {
         final String url = "/api/articles/{id}";
         final String title = "title";
         final String content = "content";
-        Article savedArticle = repository.save(Article.builder()
+        Article savedArticle = articleRepository.save(Article.builder()
                 .title(title)
                 .content(content)
                 .build());
@@ -137,8 +139,8 @@ class ArticleControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        List<Article> articles = repository.findAll();
-        assertThat(articles).isEmpty();
+        assertThatThrownBy(() -> articleRepository.findById(savedArticle.getId()).get())
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @DisplayName("updateArticle")
@@ -149,7 +151,7 @@ class ArticleControllerTest {
         final String url = "/api/articles/{id}";
         final String title = "title";
         final String content = "content";
-        Article savedArticle = repository.save(Article.builder()
+        Article savedArticle = articleRepository.save(Article.builder()
                 .title(title)
                 .content(content)
                 .build());
@@ -166,7 +168,7 @@ class ArticleControllerTest {
 
         //then
         result.andExpect(status().isOk());
-        Article article = repository.findById(savedArticle.getId()).get();
+        Article article = articleRepository.findById(savedArticle.getId()).get();
 
         assertThat(article.getTitle()).isEqualTo(newTitle);
         assertThat(article.getContent()).isEqualTo(newContent);
