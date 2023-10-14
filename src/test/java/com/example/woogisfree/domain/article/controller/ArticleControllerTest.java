@@ -66,10 +66,11 @@ class ArticleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(requestBody));
 
+        //TODO check when database isn't empty
         //then
         result.andExpect(status().isCreated());
         List<Article> articles = articleRepository.findAll();
-//        assertThat(articles.size()).isEqualTo(1);
+        assertThat(articles.size()).isEqualTo(1);
         assertThat(articles.get(0).getTitle()).isEqualTo("title");
         assertThat(articles.get(0).getContent()).isEqualTo("content");
     }
@@ -91,6 +92,7 @@ class ArticleControllerTest {
         //when
         final ResultActions resultActions = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
 
+        //TODO check when database isn't empty
         //then
         resultActions
                 .andExpect(status().isOk())
@@ -114,6 +116,7 @@ class ArticleControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(get(url, savedArticle.getId()));
 
+        //TODO check when database isn't empty
         //then
         resultActions
                 .andExpect(status().isOk())
