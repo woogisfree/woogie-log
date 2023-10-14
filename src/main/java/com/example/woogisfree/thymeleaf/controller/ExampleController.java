@@ -1,4 +1,4 @@
-package com.example.woogisfree.domain.thymeleaf.controller;
+package com.example.woogisfree.thymeleaf.controller;
 
 import lombok.Getter;
 import lombok.Setter;
