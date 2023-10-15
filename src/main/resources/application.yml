@@ -31,6 +31,10 @@ springdoc:
     display-request-duration: true
     operations-sorter: alpha
 
+#jwt
+jwt:
+  issuer: woogisfree@gmail.com
+  secret_key: TheSpecifiedKeyByteArrayIs192BitsWhichIsNotSecureEnoughForAnyJWTHMACSHAAlgorithm
 ---
 spring:
   config:
