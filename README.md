@@ -1,5 +1,9 @@
 # Woogie's Toy
 
+Please. When you build something, check the official document first..
+
+<br>
+
 ## Roadmap
 
 - [x] Simple Article Project
