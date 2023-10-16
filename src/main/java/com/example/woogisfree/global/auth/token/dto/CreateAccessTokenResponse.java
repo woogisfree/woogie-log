@@ -1,4 +1,4 @@
-package com.example.woogisfree.domain.token.dto;
+package com.example.woogisfree.global.auth.token.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

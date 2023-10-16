@@ -1,4 +1,4 @@
-package com.example.woogisfree.domain.token.service;
+package com.example.woogisfree.global.auth.token.service;
 
 import com.example.woogisfree.domain.user.entity.User;
 import com.example.woogisfree.domain.user.service.UserService;

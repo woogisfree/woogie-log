@@ -1,7 +1,7 @@
-package com.example.woogisfree.domain.token.service;
+package com.example.woogisfree.global.auth.token.service;
 
-import com.example.woogisfree.domain.token.entity.RefreshToken;
-import com.example.woogisfree.domain.token.repository.RefreshTokenRepository;
+import com.example.woogisfree.global.auth.token.entity.RefreshToken;
+import com.example.woogisfree.global.auth.token.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

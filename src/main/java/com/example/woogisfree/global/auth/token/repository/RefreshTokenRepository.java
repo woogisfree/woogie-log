@@ -1,6 +1,6 @@
-package com.example.woogisfree.domain.token.repository;
+package com.example.woogisfree.global.auth.token.repository;
 
-import com.example.woogisfree.domain.token.entity.RefreshToken;
+import com.example.woogisfree.global.auth.token.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

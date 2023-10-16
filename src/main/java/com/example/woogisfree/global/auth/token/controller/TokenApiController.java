@@ -1,8 +1,8 @@
-package com.example.woogisfree.domain.token.controller;
+package com.example.woogisfree.global.auth.token.controller;
 
-import com.example.woogisfree.domain.token.dto.CreateAccessTokenRequest;
-import com.example.woogisfree.domain.token.dto.CreateAccessTokenResponse;
-import com.example.woogisfree.domain.token.service.TokenService;
+import com.example.woogisfree.global.auth.token.dto.CreateAccessTokenRequest;
+import com.example.woogisfree.global.auth.token.dto.CreateAccessTokenResponse;
+import com.example.woogisfree.global.auth.token.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

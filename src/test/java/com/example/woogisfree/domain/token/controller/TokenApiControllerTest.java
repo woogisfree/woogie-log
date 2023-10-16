@@ -1,8 +1,8 @@
 package com.example.woogisfree.domain.token.controller;
 
-import com.example.woogisfree.domain.token.dto.CreateAccessTokenRequest;
-import com.example.woogisfree.domain.token.entity.RefreshToken;
-import com.example.woogisfree.domain.token.repository.RefreshTokenRepository;
+import com.example.woogisfree.global.auth.token.dto.CreateAccessTokenRequest;
+import com.example.woogisfree.global.auth.token.entity.RefreshToken;
+import com.example.woogisfree.global.auth.token.repository.RefreshTokenRepository;
 import com.example.woogisfree.domain.user.entity.User;
 import com.example.woogisfree.domain.user.repository.UserRepository;
 import com.example.woogisfree.global.config.jwt.JwtFactory;

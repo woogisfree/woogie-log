@@ -1,4 +1,4 @@
-package com.example.woogisfree.domain.token.entity;
+package com.example.woogisfree.global.auth.token.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
