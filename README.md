@@ -50,6 +50,8 @@ Please. When you build something, check the official document first..
 
 [//]: # (Admin Page 에는 회원가입한 유저의 수, 해당 유저의 활동 : 글 작성, 좋아요 누른 글, 댓글 단 내용과 댓글단 글 다 볼수있음, Swagger 로 넘어가는 탭도 있음)
 
+kafka, docker-compose
+
 <br>
 
 ## Trouble Shooting
