@@ -29,19 +29,10 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-    @Column(unique = true)
-    private String nickname;
-
     @Builder
-    public User(String email, String password, String nickname) {
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
-    }
-
-    public User update(String nickname) {
-        this.nickname = nickname;
-        return this;
     }
 
     @Override
