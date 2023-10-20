@@ -66,3 +66,4 @@ Please. When you build something, check the official document first..
 ## Bug
 
 - [ ] After adding Spring Security, can't open swagger page even if login
+- [x] After adding Spring Security, can't open swagger page even if login

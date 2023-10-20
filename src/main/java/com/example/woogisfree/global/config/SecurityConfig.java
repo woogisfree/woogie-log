@@ -16,6 +16,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
+    private static final String[] PERMIT_URL_ARRAY = {
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
 
     private final UserDetailsService userService;
 
@@ -23,14 +27,14 @@ public class SecurityConfig {
     public WebSecurityCustomizer configure() {
         return (web -> web.ignoring()
                 .requestMatchers(toString())
-                .requestMatchers("/static/**"));
+                .requestMatchers(PERMIT_URL_ARRAY));
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/signup", "/user").permitAll()
+                        .requestMatchers("/login", "/signup", "/user", "/swagger-ui/**", "/api-docs").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
