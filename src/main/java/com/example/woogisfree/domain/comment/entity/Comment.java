@@ -1,6 +1,6 @@
-package com.example.woogisfree.domain.article.entity;
+package com.example.woogisfree.domain.comment.entity;
 
-import com.example.woogisfree.domain.comment.entity.Comment;
+import com.example.woogisfree.domain.article.entity.Article;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,28 +11,28 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Article {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "article_id", updatable = false)
+    @Column(name = "comment_id", updatable = false)
     private Long id;
-
-    @Column(nullable = false)
-    private String title;
 
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
-    private List<Comment> comments = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "article_id")
+    private Article article;
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
 
     @CreatedDate
     @Column(name = "created_at")
@@ -43,13 +43,12 @@ public class Article {
     private LocalDateTime modifiedAt;
 
     @Builder
-    public Article(String title, String content) {
-        this.title = title;
+    public Comment(String content, Article article) {
         this.content = content;
+        this.article = article;
     }
 
-    public void update(String title, String content) {
-        this.title = title;
+    public void update(String content) {
         this.content = content;
     }
 }
