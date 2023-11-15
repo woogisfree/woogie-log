@@ -64,6 +64,8 @@ On the Admin Page, you can see the number of users who have registered as member
 
 1. Add Test Database [Reference](https://bepoz-study-diary.tistory.com/371)
 2. Spring Security + Redis
+3. Postgresql Replication with Docker
+4. Docker Compose Setting
 
 <br>
 
