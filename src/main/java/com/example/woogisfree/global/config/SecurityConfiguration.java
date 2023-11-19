@@ -14,11 +14,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
     private static final String[] PERMIT_URL_ARRAY = {
-            "/signin",
-            "/signin-error",
+            "/login",
+            "/login-error",
             "/adduser",
 
             //html, css, js
+            "/webjars/**",
+            "/css/*",
             "/static/**",
             "/templates/**",
     };
@@ -31,7 +33,7 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/signin").failureUrl("/signin-error")
+                        .loginPage("/login").failureUrl("/login-error")
                 ).build();
     }
 

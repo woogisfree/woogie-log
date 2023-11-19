@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @AllArgsConstructor
-public class UserRegistrationController {
+public class RegistrationController {
 
     private final UserService userService;
 
@@ -33,7 +33,7 @@ public class UserRegistrationController {
         }
 
         userService.createUser(request);
-        return "redirect:adduser ? success";
+        return "redirect: adduser ? success";
     }
 }
 
