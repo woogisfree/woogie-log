@@ -16,7 +16,7 @@ public class SecurityConfiguration {
     private static final String[] PERMIT_URL_ARRAY = {
             "/login",
             "/login-error",
-            "/adduser",
+            "/register",
 
             //html, css, js
             "/webjars/**",
@@ -34,16 +34,12 @@ public class SecurityConfiguration {
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login").failureUrl("/login-error")
+                        .defaultSuccessUrl("/articles", true)
                 ).build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
     }
 }

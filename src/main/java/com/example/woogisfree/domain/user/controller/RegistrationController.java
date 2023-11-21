@@ -17,23 +17,23 @@ public class RegistrationController {
 
     private final UserService userService;
 
-    @GetMapping("/adduser")
+    @GetMapping("/register")
     public String register(Model model) {
-        model.addAttribute("user", model);
-        return "add-user";
+        model.addAttribute("user", new AddUserRequest());
+        return "register";
     }
 
-    @PostMapping("/adduser")
+    @PostMapping("/register")
     public String register(
             @Valid @ModelAttribute("user") AddUserRequest request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            return "add-user";
+            return "register";
         }
 
         userService.createUser(request);
-        return "redirect: adduser ? success";
+        return "redirect:register?success";
     }
 }
 

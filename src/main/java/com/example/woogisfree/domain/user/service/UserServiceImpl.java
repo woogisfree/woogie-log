@@ -5,9 +5,11 @@ import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.exception.PasswordMismatchException;
 import com.example.woogisfree.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApplicationUser findByEmail(String email) {
-        return null;
+    public ApplicationUser findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
