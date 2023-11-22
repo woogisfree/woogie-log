@@ -32,4 +32,9 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build());
     }
+
+    @Override
+    public ApplicationUser findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 }

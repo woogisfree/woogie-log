@@ -6,4 +6,5 @@ import com.example.woogisfree.domain.user.entity.ApplicationUser;
 public interface UserService {
 
     ApplicationUser createUser(AddUserRequest request);
+    ApplicationUser findByUsername(String username);
 }
