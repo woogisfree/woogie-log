@@ -28,25 +28,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="intputFirstname">Firstname</label>
-                    <input type="text" th:field="*{firstName}" class="form-control" id="intputFirstname" placeholder="Enter First Name"
-                           autofocus>
-                    <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label for="inputLastname">Lastname</label>
-                    <input type="text" th:field="*{lastName}" class="form-control" id="inputLastname" placeholder="Enter Last Name">
-                    <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger"></span>
-                </div>
-                <div class="form-group">
                     <label for="inputUsername">Username</label>
                     <input type="text" th:field="*{username}" class="form-control" id="inputUsername" placeholder="Enter Username">
                     <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label for="inputEmail">Email Address</label>
-                    <input type="email" th:field="*{email}" class="form-control" id="inputEmail" placeholder="Enter Email">
-                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Password</label>
@@ -58,6 +42,22 @@
                     <input type="password" th:field="*{confirmPassword}" class="form-control" id="confirmPassword"
                            placeholder="Confirm Password">
                     <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="intputFirstname">Firstname</label>
+                    <input type="text" th:field="*{firstName}" class="form-control" id="intputFirstname" placeholder="Enter First Name"
+                    autofocus>
+                    <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="inputLastname">Lastname</label>
+                    <input type="text" th:field="*{lastName}" class="form-control" id="inputLastname" placeholder="Enter Last Name">
+                    <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail">Email Address</label>
+                    <input type="email" th:field="*{email}" class="form-control" id="inputEmail" placeholder="Enter Email">
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
                 </div>
                 <div class="form-group text-center">
                     <input type="submit" class="btn btn-dark center" value="Sign Up"/>
