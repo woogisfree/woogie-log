@@ -9,6 +9,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
+
+import static org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.*;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +29,7 @@ public class SecurityConfiguration {
             "/templates/**",
     };
 
+    //TODO: What is <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> ?
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -35,7 +40,13 @@ public class SecurityConfiguration {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login").failureUrl("/login-error")
                         .defaultSuccessUrl("/articles", true)
-                ).build();
+                )
+                .logout((logout -> {
+                    logout.addLogoutHandler(new HeaderWriterLogoutHandler(
+                                    new ClearSiteDataHeaderWriter(COOKIES, CACHE, STORAGE)))
+                            .logoutSuccessUrl("/login");
+                }))
+                .build();
     }
 
     @Bean
