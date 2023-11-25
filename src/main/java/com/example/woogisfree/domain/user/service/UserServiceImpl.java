@@ -2,6 +2,7 @@ package com.example.woogisfree.domain.user.service;
 
 import com.example.woogisfree.domain.user.dto.AddUserRequest;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
+import com.example.woogisfree.domain.user.exception.EmailAlreadyExistsException;
 import com.example.woogisfree.domain.user.exception.PasswordMismatchException;
 import com.example.woogisfree.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,11 @@ public class UserServiceImpl implements UserService {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new PasswordMismatchException("Password and confirmation password do not match.");
         }
+
+        //TODO Let's think about how to catch this part later
+//        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+//            throw new EmailAlreadyExistsException("Email already exists.");
+//        }
 
         return userRepository.save(ApplicationUser.builder()
                 .firstName(request.getFirstName())

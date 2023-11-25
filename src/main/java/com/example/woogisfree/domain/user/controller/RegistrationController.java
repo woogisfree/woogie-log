@@ -23,6 +23,11 @@ public class RegistrationController {
         return "register";
     }
 
+    //TODO Email unique, password != confirm password => Error message if it is different when going to the next tab
+    // try catch (EmailAlreadyExistsException | PasswordMismatchException e) {
+    //       e instanceof EmailAlreadyExistsException
+    //       model.addAttribute("errorMessage", "Email already exists. Please choose a different email.");
+    //       return "register";
     @PostMapping("/register")
     public String register(
             @Valid @ModelAttribute("user") AddUserRequest request,
