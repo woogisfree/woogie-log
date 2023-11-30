@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class BlogViewController {
+public class ArticleViewController {
 
     private final ArticleService articleService;
 

@@ -1,6 +1,7 @@
 package com.example.woogisfree.domain.article.entity;
 
 import com.example.woogisfree.domain.comment.entity.Comment;
+import com.example.woogisfree.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Article {
+public class Article extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,14 +35,6 @@ public class Article {
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "modified_at")
-    private LocalDateTime modifiedAt;
-
     @Builder
     public Article(String title, String content) {
         this.title = title;
@@ -53,6 +46,3 @@ public class Article {
         this.content = content;
     }
 }
-
-
-//무한루프
