@@ -25,6 +25,9 @@ public class SecurityConfiguration {
             "/css/*",
             "/static/**",
             "/templates/**",
+
+            // Additional permit URLs
+            "/api/articles",
     };
 
     //TODO: What is <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> ?
