@@ -47,6 +47,7 @@ public class SecurityConfiguration {
                                     new ClearSiteDataHeaderWriter(COOKIES, CACHE, STORAGE)))
                             .logoutSuccessUrl("/login");
                 }))
+                .csrf().disable()
                 .build();
     }
 

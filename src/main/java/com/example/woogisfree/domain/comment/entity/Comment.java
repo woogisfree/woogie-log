@@ -32,6 +32,10 @@ public class Comment {
 
     public void setArticle(Article article) {
         this.article = article;
+
+        if (!article.getComments().contains(this)) {
+            article.getComments().add(this);
+        }
     }
 
     @CreatedDate

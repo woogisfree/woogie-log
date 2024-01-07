@@ -7,6 +7,7 @@ import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Article API")
 @RequiredArgsConstructor
 @RequestMapping("/api/articles")
@@ -24,7 +26,6 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request) {
-
         Article savedArticle = articleService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedArticle);
