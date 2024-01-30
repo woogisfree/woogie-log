@@ -47,7 +47,6 @@ public class ArticleViewController {
             Article article = articleService.findById(id);
             model.addAttribute("article", new ArticleViewResponse(article));
         }
-
         return "newArticle";
     }
 }

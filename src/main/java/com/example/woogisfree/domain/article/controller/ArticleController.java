@@ -33,7 +33,6 @@ public class ArticleController {
 
     @GetMapping
     public ResponseEntity<List<ArticleResponse>> findAllArticles() {
-
         List<ArticleResponse> articles = articleService.findAll()
                 .stream()
                 .sorted(Comparator.comparing(Article::getId))
@@ -44,14 +43,12 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") long id) {
-
         Article article = articleService.findById(id);
         return ResponseEntity.ok().body(new ArticleResponse(article));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteArticle(@PathVariable("id") long id) {
-
         articleService.delete(id);
         return ResponseEntity.ok().build();
     }
@@ -60,7 +57,6 @@ public class ArticleController {
     public ResponseEntity<Article> updateArticle(
             @PathVariable("id") long id,
             @RequestBody UpdateArticleRequest request) {
-
         Article updatedArticle = articleService.update(id, request);
         return ResponseEntity.ok().body(updatedArticle);
     }
