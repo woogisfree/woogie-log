@@ -1,4 +1,4 @@
-package com.example.woogisfree.view.dto;
+package com.example.woogisfree.domain.article.dto;
 
 import com.example.woogisfree.domain.article.entity.Article;
 import lombok.Getter;

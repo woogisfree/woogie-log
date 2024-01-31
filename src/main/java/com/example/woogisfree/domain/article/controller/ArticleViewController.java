@@ -1,9 +1,9 @@
-package com.example.woogisfree.view.controller;
+package com.example.woogisfree.domain.article.controller;
 
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
-import com.example.woogisfree.view.dto.ArticleListViewResponse;
-import com.example.woogisfree.view.dto.ArticleViewResponse;
+import com.example.woogisfree.domain.article.dto.ArticleListViewResponse;
+import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -41,13 +41,11 @@ public class ArticleViewController {
 
     @GetMapping("/new-article")
     public String newArticle(@RequestParam(required = false) Long id, Model model) {
-
         if (id == null) model.addAttribute("article", new ArticleViewResponse());
         else {
             Article article = articleService.findById(id);
             model.addAttribute("article", new ArticleViewResponse(article));
         }
-
         return "newArticle";
     }
 }
