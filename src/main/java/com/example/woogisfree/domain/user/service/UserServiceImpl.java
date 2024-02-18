@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService {
         }
 
         //TODO Let's think about how to catch this part later
-//        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-//            throw new EmailAlreadyExistsException("Email already exists.");
-//        }
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("Email already exists.");
+        }
 
         return userRepository.save(ApplicationUser.builder()
                 .firstName(request.getFirstName())

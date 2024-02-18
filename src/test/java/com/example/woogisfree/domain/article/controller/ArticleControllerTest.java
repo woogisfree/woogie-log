@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -59,13 +60,16 @@ class ArticleControllerTest {
         final String url = "/api/articles";
         final String title = "title";
         final String content = "content";
-        final AddArticleRequest userRequest = new AddArticleRequest(title, content);
+        final Long userId = 1L;
+        final AddArticleRequest userRequest = new AddArticleRequest(title, content, userId);
         final String requestBody = objectMapper.writeValueAsString(userRequest);
 
         //when
         ResultActions result = mockMvc.perform(post(url)
+                        .with(SecurityMockMvcRequestPostProcessors.user("username").roles("USER"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(requestBody));
+
 
         //TODO check when database isn't empty
         //then
