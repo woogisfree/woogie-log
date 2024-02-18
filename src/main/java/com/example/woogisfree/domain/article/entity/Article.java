@@ -1,5 +1,6 @@
 package com.example.woogisfree.domain.article.entity;
 
+import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -25,10 +26,15 @@ public class Article extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private ApplicationUser user;
+
     @Builder
-    public Article(String title, String content) {
+    public Article(String title, String content, ApplicationUser user) {
         this.title = title;
         this.content = content;
+        this.user = user;
     }
 
     public void update(String title, String content) {

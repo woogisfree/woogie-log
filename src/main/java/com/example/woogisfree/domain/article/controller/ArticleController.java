@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -26,6 +29,9 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
         Article savedArticle = articleService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedArticle);

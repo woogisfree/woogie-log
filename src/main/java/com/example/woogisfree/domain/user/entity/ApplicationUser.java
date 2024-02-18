@@ -29,6 +29,10 @@ public class ApplicationUser {
     @Column(nullable = false)
     private String password;
 
+    public ApplicationUser(Long id) {
+        this.id = id;
+    }
+
     @Builder
     public ApplicationUser(String firstName, String lastName, String username, String email, String password) {
         this.firstName = firstName;
