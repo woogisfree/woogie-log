@@ -70,6 +70,7 @@ class ArticleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(requestBody));
 
+
         //TODO check when database isn't empty
         //then
         result.andExpect(status().isCreated());
