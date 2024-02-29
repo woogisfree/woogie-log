@@ -26,8 +26,8 @@ public class Article extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "users_id")
     private ApplicationUser user;
 
     @Builder

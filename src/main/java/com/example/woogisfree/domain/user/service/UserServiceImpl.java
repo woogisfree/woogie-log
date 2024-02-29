@@ -4,6 +4,7 @@ import com.example.woogisfree.domain.user.dto.AddUserRequest;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.exception.EmailAlreadyExistsException;
 import com.example.woogisfree.domain.user.exception.PasswordMismatchException;
+import com.example.woogisfree.domain.user.exception.UserNotFoundException;
 import com.example.woogisfree.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,5 +38,16 @@ public class UserServiceImpl implements UserService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build());
+    }
+
+    @Override
+    public ApplicationUser findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Cannot Find User. userId : " + userId));
+    }
+
+    @Override
+    public ApplicationUser findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

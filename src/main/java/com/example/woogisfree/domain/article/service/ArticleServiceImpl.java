@@ -5,6 +5,9 @@ import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.exception.ArticleNotFoundException;
 import com.example.woogisfree.domain.article.repository.ArticleRepository;
+import com.example.woogisfree.domain.user.entity.ApplicationUser;
+import com.example.woogisfree.domain.user.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +19,13 @@ import java.util.List;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final UserService userService;
 
     @Override
     public Article save(AddArticleRequest request) {
-        return articleRepository.save(request.toEntity());
+
+        ApplicationUser user = userService.findUserById(request.getUserId());
+        return articleRepository.save(request.toEntity(user));
     }
 
     @Override

@@ -17,11 +17,11 @@ public class AddArticleRequest {
     private String content;
     private Long userId;
 
-    public Article toEntity() {
+    public Article toEntity(ApplicationUser user) {
         return Article.builder()
                 .title(title)
                 .content(content)
-                .user(new ApplicationUser(userId))
+                .user(user)
                 .build();
     }
 }
