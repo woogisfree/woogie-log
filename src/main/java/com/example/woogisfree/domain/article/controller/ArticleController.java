@@ -33,7 +33,6 @@ public class ArticleController {
                                               @RequestBody AddArticleRequest request) {
         Long userId = getUserIdFromUserDetails(userDetails);
         request.setUserId(userId);
-        log.info("userId={}", userId);
 
         Article savedArticle = articleService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -77,7 +76,6 @@ public class ArticleController {
     private Long getUserIdFromUserDetails(UserDetails userDetails) {
         if (userDetails instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) userDetails;
-            log.info("userService.findUserByUsername(user.getUsername()).getId()={}", userService.findUserByUsername(user.getUsername()).getId());
             return userService.findUserByUsername(user.getUsername()).getId();
         }
         return null;

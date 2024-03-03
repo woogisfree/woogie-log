@@ -23,7 +23,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article save(AddArticleRequest request) {
-
         ApplicationUser user = userService.findUserById(request.getUserId());
         return articleRepository.save(request.toEntity(user));
     }
