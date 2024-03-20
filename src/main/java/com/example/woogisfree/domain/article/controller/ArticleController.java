@@ -29,14 +29,13 @@ public class ArticleController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<Article> addArticle(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<ArticleResponse> addArticle(@AuthenticationPrincipal UserDetails userDetails,
                                               @RequestBody AddArticleRequest request) {
         Long userId = getUserIdFromUserDetails(userDetails);
         request.setUserId(userId);
-
-        Article savedArticle = articleService.save(request);
+        ArticleResponse result = articleService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(savedArticle);
+                .body(result);
     }
 
     @GetMapping

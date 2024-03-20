@@ -1,6 +1,7 @@
 package com.example.woogisfree.domain.article.service;
 
 import com.example.woogisfree.domain.article.dto.AddArticleRequest;
+import com.example.woogisfree.domain.article.dto.ArticleResponse;
 import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.exception.ArticleNotFoundException;
@@ -22,9 +23,10 @@ public class ArticleServiceImpl implements ArticleService {
     private final UserService userService;
 
     @Override
-    public Article save(AddArticleRequest request) {
+    public ArticleResponse save(AddArticleRequest request) {
         ApplicationUser user = userService.findUserById(request.getUserId());
-        return articleRepository.save(request.toEntity(user));
+        Article savedArticle = articleRepository.save(request.toEntity(user));
+        return new ArticleResponse(savedArticle);
     }
 
     @Override
