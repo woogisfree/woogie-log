@@ -21,6 +21,8 @@ public class SecurityConfig {
             "/login",
             "/login-error",
             "/register",
+            "/api/v1/sign-in",
+            "/api/v1/sign-up",
 
             //html, css, js
             "/webjars/**",
