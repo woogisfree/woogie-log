@@ -1,20 +1,18 @@
-package com.example.woogisfree.global.config;
+package com.example.woogisfree.global.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
-import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
-
-import static org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.*;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration {
+public class SecurityConfig {
     private static final String[] PERMIT_URL_ARRAY = {
             "/login",
             "/login-error",
@@ -30,25 +28,15 @@ public class SecurityConfiguration {
             "/api/articles",
     };
 
-    //TODO: What is <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> ?
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PERMIT_URL_ARRAY).permitAll()
                         .anyRequest().authenticated()
-                )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login").failureUrl("/login-error")
-                        .defaultSuccessUrl("/articles", true)
-                )
-                .logout((logout -> {
-                    logout.addLogoutHandler(new HeaderWriterLogoutHandler(
-                                    new ClearSiteDataHeaderWriter(COOKIES, CACHE, STORAGE)))
-                            .logoutSuccessUrl("/login");
-                }))
-                .csrf().disable()
-                .build();
+                ).build();
     }
 
     @Bean
