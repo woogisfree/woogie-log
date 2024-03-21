@@ -27,9 +27,6 @@ public class SecurityConfig {
             "/css/*",
             "/static/**",
             "/templates/**",
-
-            // Additional permit URLs
-            "/api/articles",
     };
 
     @Bean
