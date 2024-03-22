@@ -14,8 +14,6 @@ public interface UserService {
 
     UserResponse signUp(SignUpRequest signUpRequest);
 
-    ApplicationUser createUser(AddUserRequest request);
-
     ApplicationUser findUserById(Long id);
 
     Optional<ApplicationUser> findUserByUsername(String username);
