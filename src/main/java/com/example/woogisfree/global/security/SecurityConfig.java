@@ -19,9 +19,9 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private static final String[] PERMIT_URL_ARRAY = {
             "/",
-            "/login",
-            "/login-error",
-            "/register",
+            "/sign-in",
+            "/sign-up",
+
             "/api/v1/sign-in",
             "/api/v1/sign-up",
 

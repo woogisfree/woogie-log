@@ -1,6 +1,5 @@
 package com.example.woogisfree.domain.user.service;
 
-import com.example.woogisfree.domain.user.dto.AddUserRequest;
 import com.example.woogisfree.domain.user.dto.SignUpRequest;
 import com.example.woogisfree.domain.user.dto.UserResponse;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
@@ -55,27 +54,6 @@ public class UserServiceImpl implements UserService {
                 .username(savedUser.getUsername())
                 .role(savedUser.getRole())
                 .build();
-    }
-
-    @Override
-    public ApplicationUser createUser(AddUserRequest request) {
-
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new PasswordMismatchException("Password and confirmation password do not match.");
-        }
-
-        //TODO Let's think about how to catch this part later
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new EmailAlreadyExistsException("Email already exists.");
-        }
-
-        return userRepository.save(ApplicationUser.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .build());
     }
 
     @Override
