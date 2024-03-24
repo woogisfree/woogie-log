@@ -53,15 +53,16 @@
                 password: password,
             })
         }).then(response => {
-            const existingErrorMessage = document.querySelector('.alert-danger');
-            if (existingErrorMessage) {
-                existingErrorMessage.remove();
-            }
-
             if (response.ok) {
                 document.cookie = response.headers.get('Authorization')
-                console.log(document.cookie)
+
+                //redirect to article list page
+                window.location.href = '/articles';
             } else {
+                const existingErrorMessage = document.querySelector('.alert-danger');
+                if (existingErrorMessage) {
+                    existingErrorMessage.remove();
+                }
                 document.getElementById('loginForm').reset();
                 document.getElementById('loginForm').insertAdjacentHTML('afterbegin', '<div class="alert alert-danger">Wrong Username or Password</div>');
             }

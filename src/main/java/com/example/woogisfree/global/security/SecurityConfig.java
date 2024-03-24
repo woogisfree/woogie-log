@@ -21,6 +21,7 @@ public class SecurityConfig {
             "/",
             "/sign-in",
             "/sign-up",
+//            "/articles",
 
             "/api/v1/sign-in",
             "/api/v1/sign-up",

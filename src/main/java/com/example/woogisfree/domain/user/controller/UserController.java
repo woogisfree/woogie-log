@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<?> signIn(@RequestBody SignInRequest signInRequest) {
+    public ResponseEntity<JwtToken> signIn(@RequestBody SignInRequest signInRequest) {
         String username = signInRequest.getUsername();
         String password = signInRequest.getPassword();
         JwtToken jwtToken = userService.signIn(username, password);
@@ -33,7 +33,7 @@ public class UserController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwtToken.getAccessToken());
-        return new ResponseEntity<>(headers, HttpStatus.OK);
+        return new ResponseEntity<>(jwtToken, headers, HttpStatus.OK);
     }
 
     @PostMapping("/sign-up")
