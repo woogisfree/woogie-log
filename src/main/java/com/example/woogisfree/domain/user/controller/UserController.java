@@ -32,7 +32,7 @@ public class UserController {
         log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + jwtToken.getAccessToken());
+        headers.setBearerAuth(jwtToken.getAccessToken());
         return new ResponseEntity<>(jwtToken, headers, HttpStatus.OK);
     }
 
