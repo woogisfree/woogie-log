@@ -1,7 +1,7 @@
 package com.example.woogisfree.domain.article.entity;
 
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
-import com.example.woogisfree.global.common.BaseEntity;
+import com.example.woogisfree.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Article extends BaseEntity {
+public class Article extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

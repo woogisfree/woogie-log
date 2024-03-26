@@ -12,9 +12,11 @@ import com.example.woogisfree.global.security.JwtToken;
 import com.example.woogisfree.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +34,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public JwtToken signIn(String username, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-        return tokenProvider.generateToken(authentication);
+        try {
+            Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
+            return tokenProvider.generateToken(authentication);
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Wrong username or password.");
+        }
     }
 
     @Override

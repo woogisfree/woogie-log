@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,16 +25,20 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<JwtToken> signIn(@RequestBody SignInRequest signInRequest) {
-        String username = signInRequest.getUsername();
-        String password = signInRequest.getPassword();
-        JwtToken jwtToken = userService.signIn(username, password);
-        log.info("request username = {}, password = {}", username, password);
-        log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
+    public ResponseEntity<?> signIn(@RequestBody SignInRequest signInRequest) {
+        try {
+            String username = signInRequest.getUsername();
+            String password = signInRequest.getPassword();
+            JwtToken jwtToken = userService.signIn(username, password);
+            log.info("request username = {}, password = {}", username, password);
+            log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(jwtToken.getAccessToken());
-        return new ResponseEntity<>(jwtToken, headers, HttpStatus.OK);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(jwtToken.getAccessToken());
+            return new ResponseEntity<>(jwtToken, headers, HttpStatus.OK);
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
     @PostMapping("/sign-up")
