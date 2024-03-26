@@ -17,15 +17,21 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6 border rounded-bottom border-dark p-3">
-            <div th:if="${loginError}" class="alert alert-danger">Wrong Username or Password</div>
-            <form id="loginForm" th:action="@{/api/v1/sign-in}" method="post">
+            <div th:if="${param.fail}">
+                <div class="alert alert-success">
+                    Wrong Username or Password
+                </div>
+            </div>
+
+<!--            <div th:if="${loginError}" class="alert alert-danger">Wrong Username or Password</div>-->
+            <form id="loginForm" action="#" th:action="@{/sign-in}" method="post">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" class="form-control" name="username" placeholder="Enter Username" required autofocus>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="Enter Password">
+                    <input type="password" class="form-control" name="password" placeholder="Enter Password" required>
                 </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-dark">Submit</button>
@@ -37,40 +43,54 @@
 </div>
 </body>
 <script>
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
         event.preventDefault();
 
-        const username = document.getElementsByName('username')[0].value;
-        const password = document.getElementsByName('password')[0].value;
+        const username = document.querySelector('input[name="username"]').value;
+        const password = document.querySelector('input[name="password"]').value;
 
-        fetch(event.target.action, {
+        await fetch('/api/v1/sign-in', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 username: username,
-                password: password,
+                password: password
             })
         }).then(response => {
+            console.log('???')
             if (response.ok) {
-                document.cookie = response.headers.get('Authorization')
-
-                //redirect to article list page
-                window.location.href = '/articles';
+                console.log(response);
+                return response.json();
             } else {
-                const existingErrorMessage = document.querySelector('.alert-danger');
-                if (existingErrorMessage) {
-                    existingErrorMessage.remove();
-                }
-                document.getElementById('loginForm').reset();
-                document.getElementById('loginForm').insertAdjacentHTML('afterbegin', '<div class="alert alert-danger">Wrong Username or Password</div>');
+                return response.text().then(message => {
+                    document.querySelector('.alert-danger').textContent = message;
+                    document.querySelector('.alert-danger').style.display = 'block';
+                });
             }
+        }).then(token => {
+            localStorage.setItem('token', token['accessToken']);
+        }).catch(error => {
+            console.error('Error:', error);
         });
-    })
+
+        const accessToken = localStorage.getItem("token");
+        console.log(JSON.stringify(accessToken) + '####');
+        await fetch('/articles', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        }).then(response => {
+            alert('hi')
+            if (response.ok) {
+                location.replace(response.url);
+            }
+        })
+    });
 </script>
 </html>
-
 
 // js 호출 안됨
 // 회원가입 비밀번호 확인 불일치 시 에러메시지 뜨지 않음
