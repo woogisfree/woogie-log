@@ -21,15 +21,13 @@ public class SecurityConfig {
             "/",
             "/sign-in",
             "/sign-up",
-
             "/api/v1/sign-in",
             "/api/v1/sign-up",
 
             //html, css, js
             "/webjars/**",
-            "/css/*",
-            "/static/**",
-            "/templates/**",
+            "/static/css/**",
+            "/static/js/**",
     };
 
     @Bean
