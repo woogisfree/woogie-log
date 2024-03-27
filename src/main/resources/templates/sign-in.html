@@ -17,13 +17,7 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6 border rounded-bottom border-dark p-3">
-            <div th:if="${param.fail}">
-                <div class="alert alert-success">
-                    Wrong Username or Password
-                </div>
-            </div>
-
-<!--            <div th:if="${loginError}" class="alert alert-danger">Wrong Username or Password</div>-->
+            <div class="alert alert-danger" style="display: none"></div>
             <form id="loginForm" action="#" th:action="@{/sign-in}" method="post">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -48,6 +42,7 @@
 
         const username = document.querySelector('input[name="username"]').value;
         const password = document.querySelector('input[name="password"]').value;
+        let loginSuccessful = false;
 
         await fetch('/api/v1/sign-in', {
             method: 'POST',
@@ -59,38 +54,28 @@
                 password: password
             })
         }).then(response => {
-            console.log('???')
             if (response.ok) {
-                console.log(response);
+                loginSuccessful = true;
                 return response.json();
-            } else {
+            } else if (response.status === 401) {
                 return response.text().then(message => {
                     document.querySelector('.alert-danger').textContent = message;
                     document.querySelector('.alert-danger').style.display = 'block';
                 });
             }
-        }).then(token => {
-            localStorage.setItem('token', token['accessToken']);
         }).catch(error => {
             console.error('Error:', error);
         });
 
-        const accessToken = localStorage.getItem("token");
-        console.log(JSON.stringify(accessToken) + '####');
-        await fetch('/articles', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + accessToken
-            }
-        }).then(response => {
-            alert('hi')
-            if (response.ok) {
-                location.replace(response.url);
-            }
-        })
+        if (loginSuccessful) {
+            await fetch('/articles', {
+                method: 'GET',
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = "/articles";
+                }
+            });
+        }
     });
 </script>
 </html>
-
-// js 호출 안됨
-// 회원가입 비밀번호 확인 불일치 시 에러메시지 뜨지 않음

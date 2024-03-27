@@ -5,9 +5,10 @@ import com.example.woogisfree.domain.user.dto.SignUpRequest;
 import com.example.woogisfree.domain.user.dto.UserResponse;
 import com.example.woogisfree.domain.user.service.UserService;
 import com.example.woogisfree.global.security.JwtToken;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,7 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<?> signIn(@RequestBody SignInRequest signInRequest) {
+    public ResponseEntity<?> signIn(@RequestBody SignInRequest signInRequest, HttpServletResponse response) {
         try {
             String username = signInRequest.getUsername();
             String password = signInRequest.getPassword();
@@ -33,9 +34,11 @@ public class UserController {
             log.info("request username = {}, password = {}", username, password);
             log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(jwtToken.getAccessToken());
-            return new ResponseEntity<>(jwtToken, headers, HttpStatus.OK);
+            Cookie cookie = new Cookie("token", jwtToken.getAccessToken());
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            return new ResponseEntity<>(jwtToken, HttpStatus.OK);
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
