@@ -21,12 +21,13 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6 border rounded-bottom border-dark p-3">
-            <form th:action="@{/sign-up}" th:object="${user}" method="POST">
+            <form id="signUpForm" th:action="@{/sign-up}" th:object="${user}" method="post">
                 <div th:if="${param.success}">
                     <div class="alert alert-success">
-                        Registration completed. You can now <a href="/sign-in" th:href="@{/sign-in}">login</a>
+                        Registration completed. You can now <a href="/sign-in" th:href="@{/sign-in}">sign-in</a>
                     </div>
                 </div>
+                <div class="alert alert-danger" style="display: none"></div>
                 <div class="form-group">
                     <label for="inputUsername">Username</label>
                     <input type="text" th:field="*{username}" class="form-control" id="inputUsername" placeholder="Enter Username" autofocus>
@@ -57,11 +58,10 @@
                     <label for="inputEmail">Email Address</label>
                     <input type="email" th:field="*{email}" class="form-control" id="inputEmail" placeholder="Enter Email">
                     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
-<!--                    <p th:if="${errorMessage}" class="text-danger" th:text="${errorMessage}"></p>-->
                 </div>
                 <div class="form-group text-center">
-                    <input type="submit" class="btn btn-dark center" value="Sign Up"/>
-                    <p>Already have an account? <a href="/sign-in">SignIn</a></p>
+                    <input type="submit" class="btn btn-dark center" value="Submit"/>
+                    <p>Already have an account? <a href="/sign-in">sign-in</a></p>
                 </div>
             </form>
         </div>
@@ -69,4 +69,46 @@
     </div>
 </div>
 </body>
+<script>
+    document.getElementById('signUpForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const username = document.querySelector('input[name="username"]').value;
+        const password = document.querySelector('input[name="password"]').value;
+        const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+        const firstName = document.querySelector('input[name="firstName"]').value;
+        const lastName = document.querySelector('input[name="lastName"]').value;
+        const email = document.querySelector('input[name="email"]').value;
+
+        const alertDanger = document.querySelector('.alert-danger');
+        alertDanger.style.display = 'none';
+
+        await fetch('/api/v1/sign-up', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                confirmPassword: confirmPassword,
+                firstName: firstName,
+                lastName: lastName,
+                email: email
+            })
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = "/sign-up?success";
+            } else {
+                return response.json().then(error => {
+                    console.log(error)
+                    document.querySelector('.alert-danger').textContent = error.message;
+                    document.querySelector('.alert-danger').style.display = 'block';
+                })
+            }
+        }).catch(error => {
+            console.log(error);
+        });
+    });
+</script>
 </html>

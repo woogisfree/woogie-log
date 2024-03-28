@@ -1,6 +1,5 @@
 package com.example.woogisfree.domain.user.service;
 
-import com.example.woogisfree.domain.user.dto.AddUserRequest;
 import com.example.woogisfree.domain.user.dto.SignUpRequest;
 import com.example.woogisfree.domain.user.dto.UserResponse;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
