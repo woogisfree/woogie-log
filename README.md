@@ -1,7 +1,8 @@
 # Woogie's Toy Project
 
 ## Feature
-- [ ] feature1
+- [ ] 연관관계 정리 (유저 - 게시글 - 댓글 + 좋아요..?)
+- [ ] articles CRUD 리팩토링
 
 ## Trouble Shooting
 - Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생
@@ -38,3 +39,27 @@ if (response.status === 401) {
 ```
 
 - 회원가입시 비밀번호와 비밀번호 확인이 불일치하거나, 이메일이 중복일때 RuntimeException 이 터지면서 whitelabel Error Page 표출
+  - 이를 해결하기 위해 `GlobalExceptionHandler` 를 만들어 예외처리를 해주었음
+  - `org.springframework.web.ErrorResponse` interface 를 사용해보았더니 에러 메시지가 가독성이 너무 떨어져서 ErrorResponse DTO 를 새로 만듬
+```java
+@Slf4j
+@ControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordMismatchException(PasswordMismatchException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST.value()).message(e.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST.value()).message(e.getMessage())
+                        .build());
+    }
+}
+```

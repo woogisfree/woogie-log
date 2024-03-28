@@ -22,7 +22,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<Object> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
         return ResponseEntity.badRequest().body(
                 ErrorResponse.builder()
                         .status(HttpStatus.BAD_REQUEST.value()).message(e.getMessage())
