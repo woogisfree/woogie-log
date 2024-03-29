@@ -1,6 +1,7 @@
 # Woogie's Toy Project
 
 ## Feature
+- [x] 로그아웃 구현
 - [ ] 연관관계 정리 (유저 - 게시글 - 댓글 + 좋아요..?)
 - [ ] articles CRUD 리팩토링
 
