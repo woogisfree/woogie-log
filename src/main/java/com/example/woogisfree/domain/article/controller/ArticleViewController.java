@@ -25,7 +25,7 @@ public class ArticleViewController {
     @GetMapping("/articles")
     public String getArticles(Model model) {
         List<ArticleListViewResponse> articles = articleService.findAll().stream()
-                .sorted(Comparator.comparing(Article::getId))
+                .sorted(Comparator.comparing(Article::getId).reversed())
                 .map(ArticleListViewResponse::new)
                 .toList();
         model.addAttribute("articles", articles);
