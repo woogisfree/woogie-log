@@ -2,8 +2,10 @@
 
 ## Feature
 - [x] 로그아웃 구현
-- [ ] 연관관계 정리 (유저 - 게시글 - 댓글 + 좋아요..?)
 - [ ] articles CRUD 리팩토링
+  - [x] 게시글 생성 버그 해결 (415 Unsupported Media Type)
+  - [ ] api 단 코드 수정 (Entity를 직접 사용하지 않고 DTO를 사용하여 리팩토링)
+- [ ] 연관관계 정리 (유저 - 게시글 - 댓글 + 좋아요..?)
 
 ## Trouble Shooting
 - Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생

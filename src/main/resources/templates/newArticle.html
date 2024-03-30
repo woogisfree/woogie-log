@@ -2,36 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>블로그 글</title>
+    <title>New Article</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 <body>
 <div class="p-5 mb-5 text-center</> bg-light">
     <h1 class="mb-3">My Blog</h1>
-    <h4 class="mb-3">블로그에 오신 것을 환영합니다.</h4>
 </div>
 
-<div class="container mt-5" style="text-align: center">
-    <div class="row">
+<div class="container mt-5" style="text-align: right">
+    <div class="row justify-content-center">
         <div class="col-lg-8">
             <article>
                 <input type="hidden" id="article-id" th:value="${article.id}">
-
-                <header class="mb-4">
-                    <input type="text" class="form-control" placeholder="title" id="title" th:value="${article.title}">
-                </header>
-                <section class="mb-5">
-                    <textarea class="form-control h-25" rows="10" placeholder="content" id="content"
-                              th:text="${article.content}"></textarea>
-                </section>
-                <button th:if="${article.id} != null" type="button" id="modify-btn" class="btn btn-primary btn-sm">수정
-                </button>
-                <button th:if="${article.id} == null" type="button" id="create-btn" class="btn btn-primary btn-sm">등록
-                </button>
+                <form th:action="@{/api/v1/articles}" method="post" id="create-article-form">
+                    <header class="mb-4">
+                        <input type="text" class="form-control" placeholder="title" id="title" name="title" th:value="${article.title}">
+                    </header>
+                    <section class="mb-5">
+                        <textarea class="form-control h-25" rows="10" placeholder="content" id="content" name="content"
+                                  th:value="${article.content}"></textarea>
+                    </section>
+                    <button type="submit" id="create-btn" class="btn btn-primary btn-sm">등록</button>
+                </form>
             </article>
         </div>
     </div>
 </div>
-
-<script src="/js/article.js"></script>
 </body>
+<script src="/js/article.js"></script>
+</html>

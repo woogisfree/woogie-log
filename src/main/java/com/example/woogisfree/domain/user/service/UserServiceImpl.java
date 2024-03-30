@@ -19,11 +19,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final AuthenticationManagerBuilder authenticationManager;
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public JwtToken signIn(String username, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         try {
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse signUp(SignUpRequest signUpRequest) {
         if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
             throw new PasswordMismatchException("Password and confirmation password do not match.");

@@ -6,7 +6,6 @@ import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import com.example.woogisfree.domain.user.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,9 +18,8 @@ import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "Article API")
 @RequiredArgsConstructor
-@RequestMapping("/api/articles")
+@RequestMapping("/api/v1/articles")
 @RestController
 public class ArticleController {
 
@@ -30,10 +28,11 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<ArticleResponse> addArticle(@AuthenticationPrincipal UserDetails userDetails,
-                                              @RequestBody AddArticleRequest request) {
+                                                      @RequestBody AddArticleRequest request) {
         Long userId = getUserIdFromUserDetails(userDetails);
         request.setUserId(userId);
         ArticleResponse result = articleService.save(request);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(result);
     }
@@ -75,7 +74,8 @@ public class ArticleController {
     private Long getUserIdFromUserDetails(UserDetails userDetails) {
         if (userDetails instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) userDetails;
-            return userService.findUserByUsername(user.getUsername()).getId();
+            return userService.findUserByUsername(user.getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("user not found")).getId();
         }
         return null;
     }

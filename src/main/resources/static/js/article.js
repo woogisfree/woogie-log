@@ -37,22 +37,26 @@ if (modifyButton) {
     )
 }
 
-const createButton = document.getElementById("create-btn")
+const createButton = document.getElementById('create-btn')
 
 if (createButton) {
-    createButton.addEventListener("click", event => {
-        fetch("/api/articles", {
-            method: "POST",
+    createButton.addEventListener('click', event => {
+        event.preventDefault();
+        let title = document.getElementById('title').value;
+        let content = document.getElementById('content').value;
+
+        fetch('/api/v1/articles', {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                title: document.getElementById('title').value,
-                content: document.getElementById('content').value
+                title: title,
+                content: content,
             }),
         }).then(() => {
-            alert('등록이 완료되었습니다.')
-            location.replace('/articles')
+            alert('게시글이 생성되었습니다.');
+            location.replace('/articles');
         })
     })
 }
