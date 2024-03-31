@@ -2,13 +2,14 @@
 
 ## Feature
 - [x] 로그아웃 구현
-- [ ] articles CRUD 리팩토링
+- [x] articles CRUD 리팩토링
   - [x] 게시글 생성 버그 해결 (415 Unsupported Media Type)
-  - [ ] api 단 코드 수정 (Entity를 직접 사용하지 않고 DTO를 사용하여 리팩토링)
+  - [x] api 단 코드 수정 (Response에 Entity를 직접 반환하는 대신 DTO로 변환하여 반환)
 - [ ] 연관관계 정리 (유저 - 게시글 - 댓글 + 좋아요..?)
 - [x] Article Entity에 createdBy, updatedBy 적용
+- [ ] articleList, article, newArticle.html 구조 정리
 
-## Trouble Shooting
+## Trouble Shooting - 추후 게시글로 모두 옮길 예정
 - Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생
   - application.yml를 수정하여 test DB를 따로 생성하여 해결
   - Test Class에는 `@ActiveProfiles("test")` 어노테이션을 추가하여 해결
