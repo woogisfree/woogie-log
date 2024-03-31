@@ -2,7 +2,6 @@ package com.example.woogisfree.domain.article.entity;
 
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.global.common.BaseEntity;
-import com.example.woogisfree.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,7 +26,7 @@ public class Article extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     private ApplicationUser user;
 

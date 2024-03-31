@@ -49,10 +49,10 @@ public class ArticleServiceImpl implements ArticleService {
     //TODO ifpresentorelse 추가
     @Override
     @Transactional
-    public Article update(long id, UpdateArticleRequest request) {
+    public ArticleResponse update(long id, UpdateArticleRequest request) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("not found : " + id));
         article.update(request.getTitle(), request.getContent());
-        return article;
+        return new ArticleResponse(article);
     }
 }

@@ -33,8 +33,7 @@ public class ArticleController {
         request.setUserId(userId);
         ArticleResponse result = articleService.save(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(result);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping
@@ -59,15 +58,15 @@ public class ArticleController {
     public ResponseEntity<Void> deleteArticle(@PathVariable("id") long id) {
 
         articleService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Article> updateArticle(
+    @PatchMapping("/{id}")
+    public ResponseEntity<ArticleResponse> updateArticle(
             @PathVariable("id") long id,
             @RequestBody UpdateArticleRequest request) {
 
-        Article updatedArticle = articleService.update(id, request);
+        ArticleResponse updatedArticle = articleService.update(id, request);
         return ResponseEntity.ok().body(updatedArticle);
     }
 

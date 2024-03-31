@@ -17,5 +17,5 @@ public interface ArticleService {
 
     void delete(long id);
 
-    Article update(long id, UpdateArticleRequest request);
+    ArticleResponse update(long id, UpdateArticleRequest request);
 }
