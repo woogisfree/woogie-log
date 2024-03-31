@@ -6,6 +6,7 @@ import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import com.example.woogisfree.domain.user.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
+@Tag(name = "Article", description = "게시글 API")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/articles")
 @RestController

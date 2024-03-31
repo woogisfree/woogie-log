@@ -87,6 +87,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 - 게시글 생성시 createdBy, updatedBy를 적용하려고 하였으나, `org.springframework.data.domain.AuditorAware` 를 구현하지 않아서 에러가 발생
   - `org.springframework.data.domain.AuditorAware` 를 구현하여 `org.springframework.data.annotation.CreatedBy` 와 `org.springframework.data.annotation.LastModifiedBy` 를 사용할 수 있도록 함
+  - 참고 - https://docs.spring.io/spring-data/jpa/docs/1.7.0.DATAJPA-580-SNAPSHOT/reference/html/auditing.html
 ```java
 @Configuration
 @EnableJpaAuditing

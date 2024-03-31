@@ -5,6 +5,7 @@ import com.example.woogisfree.domain.user.dto.SignUpRequest;
 import com.example.woogisfree.domain.user.dto.UserResponse;
 import com.example.woogisfree.domain.user.service.UserService;
 import com.example.woogisfree.global.security.JwtToken;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
+@Tag(name = "User", description = "사용자 API")
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
