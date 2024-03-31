@@ -6,6 +6,7 @@
   - [x] 게시글 생성 버그 해결 (415 Unsupported Media Type)
   - [ ] api 단 코드 수정 (Entity를 직접 사용하지 않고 DTO를 사용하여 리팩토링)
 - [ ] 연관관계 정리 (유저 - 게시글 - 댓글 + 좋아요..?)
+- [x] Article Entity에 createdBy, updatedBy 적용
 
 ## Trouble Shooting
 - Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생
@@ -80,5 +81,29 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         "status": 400,
         "detail": "Password and confirmation password do not match."
     }
+}
+```
+
+- 게시글 생성시 createdBy, updatedBy를 적용하려고 하였으나, `org.springframework.data.domain.AuditorAware` 를 구현하지 않아서 에러가 발생
+  - `org.springframework.data.domain.AuditorAware` 를 구현하여 `org.springframework.data.annotation.CreatedBy` 와 `org.springframework.data.annotation.LastModifiedBy` 를 사용할 수 있도록 함
+```java
+@Configuration
+@EnableJpaAuditing
+public class JpaConfig {
+
+    @Bean
+    public AuditorAware<String> auditorAware() {
+        return new AuditorAwareImpl();
+    }
+}
+
+public class AuditorAwareImpl implements AuditorAware<String> {
+
+  @Override
+  public Optional<String> getCurrentAuditor() {
+    return Optional.ofNullable(
+            ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                    .getUsername());
+  }
 }
 ```
