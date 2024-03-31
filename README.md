@@ -5,9 +5,11 @@
 - [x] articles CRUD 리팩토링
   - [x] 게시글 생성 버그 해결 (415 Unsupported Media Type)
   - [x] api 단 코드 수정 (Response에 Entity를 직접 반환하는 대신 DTO로 변환하여 반환)
-- [ ] 연관관계 정리 (유저 - 게시글 - 댓글 + 좋아요..?)
 - [x] Article Entity에 createdBy, updatedBy 적용
 - [ ] articleList, article, newArticle.html 구조 정리
+- [ ] article markdown 적용
+- [ ] article content에 사진, 파일 첨부기능 추가
+- [ ] comment - article 연결
 
 ## Trouble Shooting - 추후 게시글로 모두 옮길 예정
 - Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생
