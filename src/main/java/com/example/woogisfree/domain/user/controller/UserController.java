@@ -32,7 +32,8 @@ public class UserController {
             String password = signInRequest.getPassword();
             JwtToken jwtToken = userService.signIn(username, password);
             log.info("request username = {}, password = {}", username, password);
-            log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.getAccessToken(), jwtToken.getRefreshToken());
+            log.info("jwtToken accessToken = {}", jwtToken.getAccessToken());
+            log.info("jwtToken refreshToken = {}", jwtToken.getRefreshToken());
 
             Cookie cookie = new Cookie("token", jwtToken.getAccessToken());
             cookie.setHttpOnly(true);

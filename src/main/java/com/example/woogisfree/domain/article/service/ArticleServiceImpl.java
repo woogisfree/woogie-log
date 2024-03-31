@@ -8,7 +8,6 @@ import com.example.woogisfree.domain.article.exception.ArticleNotFoundException;
 import com.example.woogisfree.domain.article.repository.ArticleRepository;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
@@ -23,6 +23,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final UserService userService;
 
     @Override
+    @Transactional
     public ArticleResponse save(AddArticleRequest request) {
         ApplicationUser user = userService.findUserById(request.getUserId());
         Article savedArticle = articleRepository.save(request.toEntity(user));
@@ -41,6 +42,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         articleRepository.deleteById(id);
     }
