@@ -10,6 +10,8 @@
 - [ ] article markdown 적용
 - [ ] article content에 사진, 파일 첨부기능 추가
 - [ ] comment - article 연결
+- [ ] 웹소켓 적용
+- [ ] 배포
 
 ## Trouble Shooting - 추후 게시글로 모두 옮길 예정
 - Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생
