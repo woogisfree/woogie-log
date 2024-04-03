@@ -113,3 +113,23 @@ public class AuditorAwareImpl implements AuditorAware<String> {
   }
 }
 ```
+
+- 실수로 다른 브랜치에서 작업한 걸 커밋만 하고 푸시를 안한 상태에서 병합하고 브랜치를 지움;;
+```shell
+git reflog 명령어를 사용하여 최근 모든 git 작업 나열
+
+d272f5e (HEAD -> main, origin/main, origin/HEAD) HEAD@{0}: pull: Fast-forward
+509a32f HEAD@{1}: checkout: moving from restore-css-branch to main
+197d963 (origin/restore-css-branch, restore-css-branch) HEAD@{2}: checkout: moving from main to restore-css-branch
+fe8dc91 HEAD@{3}: checkout: moving from articleList-css to main
+197d963 (origin/restore-css-branch, restore-css-branch) HEAD@{4}: commit: feat: update 관련 js 수정
+7d88eb3 HEAD@{5}: commit: feat: articleList grid 적용
+63d09cd HEAD@{6}: checkout: moving from main to articleList-css
+fe8dc91 HEAD@{7}: checkout: moving from main to main
+fe8dc91 HEAD@{8}: checkout: moving from articleList-css to main
+
+git branch <branch-name> <commit-ID> 명령을 사용하여 새 브랜치를 생성
+이때 commit-ID는 삭제된 브랜치에서 마지막으로 작업한 커밋 ID
+
+잘 복구되었는지 확인 후 재병합
+```
