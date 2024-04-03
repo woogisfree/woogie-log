@@ -3,7 +3,7 @@ const deleteButton = document.getElementById('delete-btn');
 if (deleteButton) {
     deleteButton.addEventListener('click', event => {
         let id = document.getElementById('article-id').value;
-        fetch(`/api/articles/${id}`, {
+        fetch(`/api/v1/articles/${id}`, {
             method: 'DELETE'
         })
             .then(() => {
@@ -17,17 +17,20 @@ const modifyButton = document.getElementById('modify-btn')
 
 if (modifyButton) {
     modifyButton.addEventListener('click', event => {
+            event.preventDefault();
             let params = new URLSearchParams(location.search);
             let id = params.get('id');
+            let title = document.getElementById('title').value;
+            let content = document.getElementById('content').value;
 
-            fetch(`/api/articles/${id}`, {
-                method: 'PUT',
+            fetch(`/api/v1/articles/${id}`, {
+                method: 'PATCH',
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    title: document.getElementById('title').value,
-                    content: document.getElementById('content').value
+                    title: title,
+                    content: content,
                 })
             }).then(() => {
                 alert('수정이 완료되었습니다.')
