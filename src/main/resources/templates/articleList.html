@@ -9,11 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Oswald:wght@500&display=swap" rel="stylesheet">
 </head>
 <style>
-    .card {
+    .container2 {
         display: grid;
         grid-gap: 40px;
-        grid-template-columns: auto auto auto auto;
-        grid-template-rows: auto auto auto auto;
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .oswald-header {
@@ -38,16 +37,15 @@
         </button>
     </div>
     <div class="row">
-        <div th:each="item : ${articles}" style="text-align: center">
-            <div class="card">
+        <div class="container2"  style="text-align: center">
+            <a class="card" th:each="item : ${articles}" th:href="@{/articles/{id}(id=${item.id})}">
                 <!--TODO id는 hidden 처리-->
                 <div class="card-header" th:text="${item.id}"></div>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${item.title}"></h5>
                     <p class="card-text" th:text="${item.content}"></p>
-                    <a th:href="@{/articles/{id}(id=${item.id})}" class="btn btn-primary">보러가기</a>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </div>
