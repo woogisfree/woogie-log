@@ -15,7 +15,7 @@ public interface ArticleService {
 
     Article findById(long id);
 
-    void delete(long id);
+    void delete(long articleId);
 
     ArticleResponse update(long id, UpdateArticleRequest request);
 }

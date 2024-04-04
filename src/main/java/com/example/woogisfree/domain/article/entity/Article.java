@@ -1,5 +1,6 @@
 package com.example.woogisfree.domain.article.entity;
 
+import com.example.woogisfree.domain.comment.entity.Comment;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -8,6 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +33,9 @@ public class Article extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     private ApplicationUser user;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<Comment> commentList = new ArrayList<>();
 
     @Builder
     public Article(String title, String content, ApplicationUser user) {
