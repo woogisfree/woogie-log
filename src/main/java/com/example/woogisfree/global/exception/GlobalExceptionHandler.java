@@ -1,6 +1,7 @@
 package com.example.woogisfree.global.exception;
 
 import com.example.woogisfree.domain.article.exception.ArticleNotFoundException;
+import com.example.woogisfree.domain.comment.exception.CommentNotFoundException;
 import com.example.woogisfree.domain.user.exception.EmailAlreadyExistsException;
 import com.example.woogisfree.domain.user.exception.PasswordMismatchException;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(ArticleNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleArticleNotFoundException(ArticleNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ErrorResponse.builder()
+                        .status(HttpStatus.NOT_FOUND.value()).message(e.getMessage())
+                        .build());
+    }
+
+    /**
+     * 댓글
+     */
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 ErrorResponse.builder()
                         .status(HttpStatus.NOT_FOUND.value()).message(e.getMessage())
