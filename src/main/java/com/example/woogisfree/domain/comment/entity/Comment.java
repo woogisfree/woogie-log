@@ -25,7 +25,7 @@ public class Comment extends BaseEntity {
     private String content;
 
     @Column(columnDefinition = "boolean default false")
-    private Boolean isUpdated;
+    private Boolean isEdited;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
@@ -44,6 +44,6 @@ public class Comment extends BaseEntity {
 
     public void updateContent(String content) {
         this.content = content;
-        this.isUpdated = true;
+        this.isEdited = true;
     }
 }
