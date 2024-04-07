@@ -6,6 +6,7 @@
   - [x] 게시글 생성 버그 해결 (415 Unsupported Media Type)
   - [x] api 단 코드 수정 (Response에 Entity를 직접 반환하는 대신 DTO로 변환하여 반환)
 - [x] Article Entity에 createdBy, updatedBy 적용
+- [ ] article - comment Service refactoring
 - [ ] articleList, article, newArticle.html 구조 정리
 - [ ] article markdown 적용
 - [ ] article content에 사진, 파일 첨부기능 추가
