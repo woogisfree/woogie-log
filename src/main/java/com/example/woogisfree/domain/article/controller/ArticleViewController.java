@@ -1,5 +1,6 @@
 package com.example.woogisfree.domain.article.controller;
 
+import com.example.woogisfree.domain.article.dto.ArticleAllResponse;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import com.example.woogisfree.domain.article.dto.ArticleListViewResponse;
@@ -22,15 +23,15 @@ public class ArticleViewController {
 
     private final ArticleService articleService;
 
-    @GetMapping("/articles")
-    public String getArticles(Model model) {
-        List<ArticleListViewResponse> articles = articleService.findAll().stream()
-                .sorted(Comparator.comparing(Article::getId).reversed())
-                .map(ArticleListViewResponse::new)
-                .toList();
-        model.addAttribute("articles", articles);
-        return "articleList";
-    }
+//    @GetMapping("/articles")
+//    public String getArticles(Model model) {
+//        List<ArticleListViewResponse> articles = articleService.findAll().stream()
+//                .sorted(Comparator.comparing(ArticleAllResponse::getArticleId).reversed())
+//                .map(articleResponse -> new ArticleAllResponse(articleResponse, articleResponse.getCommentList()))
+//                .toList();
+//        model.addAttribute("articles", articles);
+//        return "articleList";
+//    }
 
     @GetMapping("/articles/{id}")
     public String getArticle(@PathVariable long id, Model model) {

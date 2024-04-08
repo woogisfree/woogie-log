@@ -1,11 +1,14 @@
 package com.example.woogisfree.domain.article.service;
 
 import com.example.woogisfree.domain.article.dto.AddArticleRequest;
+import com.example.woogisfree.domain.article.dto.ArticleAllResponse;
 import com.example.woogisfree.domain.article.dto.ArticleResponse;
 import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.exception.ArticleNotFoundException;
 import com.example.woogisfree.domain.article.repository.ArticleRepository;
+import com.example.woogisfree.domain.comment.dto.CommentResponse;
+import com.example.woogisfree.domain.comment.service.CommentService;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -21,6 +26,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserService userService;
+    private final CommentService commentService;
 
     @Override
     @Transactional
@@ -31,8 +37,17 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findAll() {
-        return articleRepository.findAll();
+    public List<ArticleAllResponse> findAll() {
+        List<Article> articleList = articleRepository.findAll();
+        List<Long> articleIds = articleList.stream()
+                .map(Article::getId)
+                .collect(Collectors.toList());
+
+        Map<Long, List<CommentResponse>> commentsByArticleId = commentService.findAllByArticleIds(articleIds);
+
+        return articleList.stream()
+                .map(article -> new ArticleAllResponse(article, commentsByArticleId.get(article.getId())))
+                .collect(Collectors.toList());
     }
 
     @Override

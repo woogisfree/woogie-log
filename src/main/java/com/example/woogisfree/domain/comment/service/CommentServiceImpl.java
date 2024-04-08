@@ -39,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
         return new AddCommentResponse(comment.getContent(), user.getUsername(), article.getId());
     }
 
+    //TODO 매번 쿼리를 날림으로써 나중에 성능에 문제가 될 수 있음
     @Override
     public Map<Long, List<CommentResponse>> findAllByArticleIds(List<Long> articleIds) {
         Map<Long, List<CommentResponse>> commentResponseByArticleId = new HashMap<>();
