@@ -1,10 +1,9 @@
 package com.example.woogisfree.domain.article.controller;
 
-import com.example.woogisfree.domain.article.dto.ArticleAllResponse;
+import com.example.woogisfree.domain.article.dto.ArticleSummaryResponse;
+import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
-import com.example.woogisfree.domain.article.dto.ArticleListViewResponse;
-import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -23,15 +21,12 @@ public class ArticleViewController {
 
     private final ArticleService articleService;
 
-//    @GetMapping("/articles")
-//    public String getArticles(Model model) {
-//        List<ArticleListViewResponse> articles = articleService.findAll().stream()
-//                .sorted(Comparator.comparing(ArticleAllResponse::getArticleId).reversed())
-//                .map(articleResponse -> new ArticleAllResponse(articleResponse, articleResponse.getCommentList()))
-//                .toList();
-//        model.addAttribute("articles", articles);
-//        return "articleList";
-//    }
+    @GetMapping("/articles")
+    public String getArticles(Model model) {
+        List<ArticleSummaryResponse> articles = articleService.findAll();
+        model.addAttribute("articles", articles);
+        return "articleList";
+    }
 
     @GetMapping("/articles/{id}")
     public String getArticle(@PathVariable long id, Model model) {

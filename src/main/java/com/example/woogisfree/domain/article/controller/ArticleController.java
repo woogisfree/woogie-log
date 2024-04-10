@@ -1,9 +1,6 @@
 package com.example.woogisfree.domain.article.controller;
 
-import com.example.woogisfree.domain.article.dto.AddArticleRequest;
-import com.example.woogisfree.domain.article.dto.ArticleAllResponse;
-import com.example.woogisfree.domain.article.dto.ArticleResponse;
-import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
+import com.example.woogisfree.domain.article.dto.*;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import com.example.woogisfree.domain.user.service.UserService;
@@ -41,23 +38,8 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    /**
-     * TODO 게시글 전체 조회시에는 게시글 제목, 내용, 댓글 수만 조회하면 됨. 수정 필요
-     */
-    @GetMapping
-    public ResponseEntity<List<ArticleAllResponse>> findAllArticles() {
-
-        List<ArticleAllResponse> result = articleService.findAll()
-                .stream()
-                .sorted(Comparator.comparing(ArticleAllResponse::getArticleId).reversed())
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok().body(result);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") long id) {
-
         Article article = articleService.findById(id);
         return ResponseEntity.ok().body(new ArticleResponse(article));
     }
