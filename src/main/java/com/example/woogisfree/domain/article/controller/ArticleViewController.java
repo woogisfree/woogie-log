@@ -2,6 +2,7 @@ package com.example.woogisfree.domain.article.controller;
 
 import com.example.woogisfree.domain.article.dto.ArticleSummaryResponse;
 import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
+import com.example.woogisfree.domain.article.dto.ArticleWithCommentResponse;
 import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,11 @@ public class ArticleViewController {
         return "articleList";
     }
 
+    //TODO CommentList 를 반환할 수 있게 되었는데, 아래 커맨트 추가해서 잘 동작하는지 확인해야함
     @GetMapping("/articles/{id}")
     public String getArticle(@PathVariable long id, Model model) {
-        Article article = articleService.findById(id);
-        model.addAttribute("article", new ArticleViewResponse(article));
+        ArticleWithCommentResponse article = articleService.findById(id);
+        model.addAttribute("article", article);
         return "article";
     }
 
@@ -39,8 +41,8 @@ public class ArticleViewController {
     public String newArticle(@RequestParam(required = false) Long id, Model model) {
         if (id == null) model.addAttribute("article", new ArticleViewResponse());
         else {
-            Article article = articleService.findById(id);
-            model.addAttribute("article", new ArticleViewResponse(article));
+            ArticleWithCommentResponse article = articleService.findById(id);
+            model.addAttribute("article", article);
         }
         return "newArticle";
     }

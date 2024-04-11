@@ -38,12 +38,6 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") long id) {
-        Article article = articleService.findById(id);
-        return ResponseEntity.ok().body(new ArticleResponse(article));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteArticle(@PathVariable("id") long id) {
 

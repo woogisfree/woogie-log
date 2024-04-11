@@ -11,7 +11,7 @@ public interface ArticleService {
 
     List<ArticleSummaryResponse> findAll();
 
-    Article findById(long id);
+    ArticleWithCommentResponse findById(long id);
 
     void delete(long articleId);
 
