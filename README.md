@@ -134,3 +134,6 @@ git branch <branch-name> <commit-ID> 명령을 사용하여 새 브랜치를 생
 
 잘 복구되었는지 확인 후 재병합
 ```
+
+- repository에서는 dto를 반환하는 것보다 순수한 entity 자체를 반환하는 것이 좋다
+  - repository에서 entity를 반환하고, service에서 dto로 변환하여 반환하는 방식으로 변경
