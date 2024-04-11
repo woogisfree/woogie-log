@@ -2,7 +2,7 @@ package com.example.woogisfree.domain.comment.controller;
 
 import com.example.woogisfree.domain.comment.dto.AddCommentRequest;
 import com.example.woogisfree.domain.comment.dto.AddCommentResponse;
-import com.example.woogisfree.domain.comment.entity.Comment;
+import com.example.woogisfree.domain.comment.dto.UpdateCommentRequest;
 import com.example.woogisfree.domain.comment.service.CommentService;
 import com.example.woogisfree.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +33,19 @@ public class CommentController {
         request.setArticleId(articleId);
         AddCommentResponse result = commentService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<Void> updateComment(@PathVariable("commentId") long commentId,
+                                              @RequestBody UpdateCommentRequest request) {
+        commentService.update(commentId, request.getContent());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") long commentId) {
+        commentService.delete(commentId);
+        return ResponseEntity.noContent().build();
     }
 
     private Long getUserIdFromUserDetails(UserDetails userDetails) {

@@ -20,9 +20,14 @@ public class CommentResponse {
         this.isEdited = isEdited;
     }
 
-    public static List<CommentResponse> listOf(List<Comment> commentList) {
-        return commentList.stream()
-                .map(comment -> new CommentResponse(comment.getId(), comment.getContent(), comment.getCreatedAt(), comment.getIsEdited()))
+    public static List<CommentResponse> listOf(List<Comment> comments) {
+        return comments.stream()
+                .map(comment -> new CommentResponse(
+                        comment.getId(),
+                        comment.getContent(),
+                        comment.getCreatedAt(),
+                        comment.getIsEdited()
+                ))
                 .toList();
     }
 }

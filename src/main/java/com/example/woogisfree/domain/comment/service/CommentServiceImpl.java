@@ -5,7 +5,6 @@ import com.example.woogisfree.domain.article.exception.ArticleNotFoundException;
 import com.example.woogisfree.domain.article.repository.ArticleRepository;
 import com.example.woogisfree.domain.comment.dto.AddCommentRequest;
 import com.example.woogisfree.domain.comment.dto.AddCommentResponse;
-import com.example.woogisfree.domain.comment.dto.CommentResponse;
 import com.example.woogisfree.domain.comment.entity.Comment;
 import com.example.woogisfree.domain.comment.exception.CommentNotFoundException;
 import com.example.woogisfree.domain.comment.repository.CommentRepository;
@@ -15,12 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -29,7 +24,6 @@ public class CommentServiceImpl implements CommentService {
     private final ArticleRepository articleRepository;
 
     @Override
-    @Transactional
     public AddCommentResponse save(AddCommentRequest request) {
         ApplicationUser user = userService.findUserById(request.getUserId());
         Article article = articleRepository.findById(request.getArticleId())
@@ -39,24 +33,7 @@ public class CommentServiceImpl implements CommentService {
         return new AddCommentResponse(comment.getContent(), user.getUsername(), article.getId());
     }
 
-    //TODO 매번 쿼리를 날림으로써 나중에 성능에 문제가 될 수 있음
     @Override
-    public Map<Long, List<CommentResponse>> findAllByArticleIds(List<Long> articleIds) {
-        Map<Long, List<CommentResponse>> commentResponseByArticleId = new HashMap<>();
-
-        for (Long articleId : articleIds) {
-            Article article = articleRepository.findById(articleId)
-                    .orElseThrow(() -> new ArticleNotFoundException("not found : " + articleId));
-            List<Comment> commentList = article.getCommentList();
-            List<CommentResponse> commentResponses = CommentResponse.listOf(commentList);
-
-            commentResponseByArticleId.put(articleId, commentResponses);
-        }
-        return commentResponseByArticleId;
-    }
-
-    @Override
-    @Transactional
     public void update(long commentId, String content) {
         commentRepository.findById(commentId)
                 .ifPresentOrElse(comment -> comment.updateContent(content),
@@ -64,9 +41,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional
     public void delete(long commentId) {
-        commentRepository.deleteById(commentId);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
+        commentRepository.delete(comment);
     }
 }
 
