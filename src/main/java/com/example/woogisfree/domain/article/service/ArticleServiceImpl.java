@@ -46,6 +46,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
+                .createdAt(article.getCreatedAt())
                 .comments(article.getCommentList())
                 .build();
     }

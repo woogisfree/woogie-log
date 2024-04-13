@@ -3,7 +3,6 @@ package com.example.woogisfree.domain.article.controller;
 import com.example.woogisfree.domain.article.dto.ArticleSummaryResponse;
 import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import com.example.woogisfree.domain.article.dto.ArticleWithCommentResponse;
-import com.example.woogisfree.domain.article.entity.Article;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,7 +24,10 @@ public class ArticleViewController {
 
     @GetMapping("/articles")
     public String getArticles(Model model) {
-        List<ArticleSummaryResponse> articles = articleService.findAll();
+        List<ArticleSummaryResponse> articles = articleService.findAll()
+                .stream()
+                .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
+                .collect(Collectors.toList());
         model.addAttribute("articles", articles);
         return "articleList";
     }
