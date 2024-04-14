@@ -6,7 +6,7 @@ import com.example.woogisfree.domain.comment.repository.CommentRepository;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.entity.UserRole;
 import com.example.woogisfree.domain.user.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Slf4j
 @DataJpaTest(properties = {
         "spring.datasource.url=jdbc:h2:mem:testdb",
         "spring.jpa.hibernate.ddl-auto=create-drop"
@@ -59,13 +59,20 @@ class ArticleRepositoryTest {
         commentRepository.save(comment5);
         commentRepository.save(comment6);
 
-        article1.
+        article1.getCommentList().add(comment1);
+        article1.getCommentList().add(comment2);
+        article1.getCommentList().add(comment3);
+        article1.getCommentList().add(comment4);
+
+        article2.getCommentList().add(comment5);
+        article2.getCommentList().add(comment6);
 
         articleRepository.save(article1);
         articleRepository.save(article2);
     }
 
     @Test
+    @Transactional
     void shouldFindAllArticlesWithComments() {
         List<Article> articles = articleRepository.findAll();
         assertEquals(2, articles.size());
@@ -79,5 +86,15 @@ class ArticleRepositoryTest {
                 assertEquals(2, article.getCommentList().size());
             }
         }
+    }
+
+    @Test
+    @Transactional
+    void shouldFindArticleByIdWithComments() {
+        Long firstArticleId = articleRepository.findAll().get(0).getId();
+        articleRepository.findAllById(firstArticleId).ifPresent(article -> {
+            assertEquals("title1", article.getTitle());
+            assertEquals(4, article.getCommentList().size());
+        });
     }
 }
