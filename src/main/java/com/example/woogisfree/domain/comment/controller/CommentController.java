@@ -28,10 +28,8 @@ public class CommentController {
     public ResponseEntity<AddCommentResponse> addComment(@AuthenticationPrincipal UserDetails userDetails,
                                                          @PathVariable("articleId") long articleId,
                                                          @RequestBody AddCommentRequest request) {
-        Long userId = getUserIdFromUserDetails(userDetails);
-        request.setUserId(userId);
-        request.setArticleId(articleId);
-        AddCommentResponse result = commentService.save(request);
+        Long userId = userService.getUserIdFromUserDetails(userDetails);
+        AddCommentResponse result = commentService.save(articleId, userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
@@ -46,14 +44,5 @@ public class CommentController {
     public ResponseEntity<Void> deleteComment(@PathVariable("commentId") long commentId) {
         commentService.delete(commentId);
         return ResponseEntity.noContent().build();
-    }
-
-    private Long getUserIdFromUserDetails(UserDetails userDetails) {
-        if (userDetails instanceof org.springframework.security.core.userdetails.User) {
-            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) userDetails;
-            return userService.findUserByUsername(user.getUsername())
-                    .orElseThrow(() -> new IllegalArgumentException("user not found")).getId();
-        }
-        return null;
     }
 }

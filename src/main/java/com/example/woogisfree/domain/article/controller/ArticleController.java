@@ -31,7 +31,7 @@ public class ArticleController {
     @PostMapping
     public ResponseEntity<ArticleResponse> addArticle(@AuthenticationPrincipal UserDetails userDetails,
                                                       @RequestBody AddArticleRequest request) {
-        Long userId = getUserIdFromUserDetails(userDetails);
+        Long userId = userService.getUserIdFromUserDetails(userDetails);
         request.setUserId(userId);
         ArticleResponse result = articleService.save(request);
 
@@ -52,14 +52,5 @@ public class ArticleController {
 
         ArticleResponse updatedArticle = articleService.update(id, request);
         return ResponseEntity.ok().body(updatedArticle);
-    }
-
-    private Long getUserIdFromUserDetails(UserDetails userDetails) {
-        if (userDetails instanceof org.springframework.security.core.userdetails.User) {
-            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) userDetails;
-            return userService.findUserByUsername(user.getUsername())
-                    .orElseThrow(() -> new IllegalArgumentException("user not found")).getId();
-        }
-        return null;
     }
 }

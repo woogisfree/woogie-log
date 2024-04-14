@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,5 +76,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<ApplicationUser> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public Long getUserIdFromUserDetails(UserDetails userDetails) {
+        if (userDetails instanceof org.springframework.security.core.userdetails.User) {
+            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) userDetails;
+            return findUserByUsername(user.getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("user not found")).getId();
+        }
+        return null;
     }
 }

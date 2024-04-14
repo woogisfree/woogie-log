@@ -4,6 +4,7 @@ import com.example.woogisfree.domain.user.dto.SignUpRequest;
 import com.example.woogisfree.domain.user.dto.UserResponse;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.global.security.JwtToken;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface UserService {
     ApplicationUser findUserById(Long id);
 
     Optional<ApplicationUser> findUserByUsername(String username);
+
+    Long getUserIdFromUserDetails(UserDetails userDetails);
 }
