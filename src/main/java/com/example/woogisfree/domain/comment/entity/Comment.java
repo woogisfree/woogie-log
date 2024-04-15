@@ -25,7 +25,7 @@ public class Comment extends BaseEntity {
     private String content;
 
     @Column(columnDefinition = "boolean default false")
-    private Boolean isEdited;
+    private Boolean isEdited = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")

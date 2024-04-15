@@ -26,7 +26,7 @@ public class CommentResponse {
                         comment.getId(),
                         comment.getContent(),
                         comment.getCreatedAt(),
-                        comment.getIsEdited()
+                        comment.getIsEdited() != null ? comment.getIsEdited() : false
                 ))
                 .toList();
     }
