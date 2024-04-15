@@ -1,7 +1,8 @@
 package com.example.woogisfree.domain.article.controller;
 
-import com.example.woogisfree.domain.article.dto.*;
-import com.example.woogisfree.domain.article.entity.Article;
+import com.example.woogisfree.domain.article.dto.AddArticleRequest;
+import com.example.woogisfree.domain.article.dto.ArticleResponse;
+import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import com.example.woogisfree.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,11 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Tag(name = "Article", description = "게시글 API")

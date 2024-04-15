@@ -6,11 +6,13 @@
   - [x] 게시글 생성 버그 해결 (415 Unsupported Media Type)
   - [x] api 단 코드 수정 (Response에 Entity를 직접 반환하는 대신 DTO로 변환하여 반환)
 - [x] Article Entity에 createdBy, updatedBy 적용
-- [ ] article - comment Service refactoring
-- [ ] articleList, article, newArticle.html 구조 정리
-- [ ] Test Code 작성
+- [x] article - comment Service refactoring
+- [ ] Article - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
+- [ ] Comment - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
+- [ ] HTML, CSS 정리
 - [ ] AWS 배포
-- [ ] CI/CD 적용
+- [ ] CI/CD (Jenkins / Github Actions / Travis CI 중 택 1)
+
 - [ ] article markdown 적용
 - [ ] article content에 사진, 파일 첨부기능 추가
 - [ ] comment - article 연결
@@ -139,3 +141,19 @@ git branch <branch-name> <commit-ID> 명령을 사용하여 새 브랜치를 생
 
 - repository에서는 dto를 반환하는 것보다 순수한 entity 자체를 반환하는 것이 좋다
   - repository에서 entity를 반환하고, service에서 dto로 변환하여 반환하는 방식으로 변경
+
+- @DataJpaTest 는 기본적으로 트랜잭션 안에서 실행된다. 즉, 테스트 후 DB에 생긴 모든 변화들이 롤백된다.
+  - 하지만 트랜잭션을 사용하지 않는 테스트를 작성할 때는 `@Transactional(propagation = Propagation.NOT_SUPPORTED)` 를 사용한다.
+```java
+@DataJpaTest
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
+public class ArticleRepositoryTest {
+  // ... 
+}
+
+@Test
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
+public void testMethodWithoutTransactions() {
+  // ... 
+}
+```
