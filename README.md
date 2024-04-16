@@ -8,6 +8,7 @@
 - [x] Article Entity에 createdBy, updatedBy 적용
 - [x] article - comment Service refactoring
 - [ ] Article - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
+- [ ] Test Code 의 실행 순서에 따라 테스트가 실패함 (순서에 의존하지 않도록 수정)
 - [ ] Comment - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
 - [ ] HTML, CSS 정리
 - [ ] AWS 배포
@@ -15,7 +16,6 @@
 
 - [ ] article markdown 적용
 - [ ] article content에 사진, 파일 첨부기능 추가
-- [ ] comment - article 연결
 - [ ] 웹소켓 적용
 
 ## Trouble Shooting - 추후 게시글로 모두 옮길 예정
@@ -155,5 +155,28 @@ public class ArticleRepositoryTest {
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public void testMethodWithoutTransactions() {
   // ... 
+}
+```
+
+- Controller의 Test Code를 작성할 때, 권한이 필요한 경우 `@WithMockUser` 어노테이션을 사용하여 권한을 부여할 수 있다.
+- `@WithMockUser`을 사용하여 username, roles 등을 설정할 수 있다. 즉, 가짜 사용자를 만드는 것이다.
+- 시행착오 : @WithMockUser 어노테이션을 사용하지 않고, SecurityContextHolder를 사용하여 Principal을 직접 설정하려고 했으나 실패함
+```java 
+@Test
+@WithMockUser(username = "user", roles = "USER")
+void addArticle() throws Exception {
+    //given
+    AddArticleRequest request = new AddArticleRequest("title", "content", 1L);
+    ApplicationUser user = new ApplicationUser("firstname", "lastname", "username", "email", "password", UserRole.USER);
+    Article article = new Article("title", "content", user);
+
+    when(userService.getUserIdFromUserDetails(any())).thenReturn(1L);
+    when(articleService.save(any())).thenReturn(new ArticleResponse(article));
+
+    //then
+    mockMvc.perform(post("/api/v1/articles")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated());
 }
 ```
