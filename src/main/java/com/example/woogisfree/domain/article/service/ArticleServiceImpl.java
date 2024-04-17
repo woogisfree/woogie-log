@@ -54,7 +54,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public void delete(long articleId) {
-        articleRepository.deleteById(articleId);
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ArticleNotFoundException("not found : " + articleId));
+        articleRepository.deleteById(article.getId());
     }
 
     //TODO ifpresentorelse 추가

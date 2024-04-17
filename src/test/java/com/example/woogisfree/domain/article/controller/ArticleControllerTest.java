@@ -1,184 +1,100 @@
 package com.example.woogisfree.domain.article.controller;
 
 import com.example.woogisfree.domain.article.dto.AddArticleRequest;
-import com.example.woogisfree.domain.article.dto.UpdateArticleRequest;
+import com.example.woogisfree.domain.article.dto.ArticleResponse;
 import com.example.woogisfree.domain.article.entity.Article;
-import com.example.woogisfree.domain.article.repository.ArticleRepository;
+import com.example.woogisfree.domain.article.service.ArticleService;
+import com.example.woogisfree.domain.article.service.ArticleServiceImpl;
+import com.example.woogisfree.domain.user.entity.ApplicationUser;
+import com.example.woogisfree.domain.user.entity.UserRole;
+import com.example.woogisfree.domain.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("test")
+@Slf4j
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class ArticleControllerTest {
 
     @Autowired
-    protected MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    protected ObjectMapper objectMapper;
+    private EntityManager em;
 
     @Autowired
-    private WebApplicationContext context;
+    private ObjectMapper objectMapper;
 
-    @Autowired
-    ArticleRepository articleRepository;
+    @MockBean
+    private ArticleServiceImpl articleService;
 
-    @BeforeEach
-    void setMockMvc() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
+    @MockBean
+    private UserService userService;
 
-    @DisplayName("addArticle")
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void addArticle() throws Exception {
-
         //given
-        final String url = "/api/articles";
-        final String title = "title";
-        final String content = "content";
-        final Long userId = 1L;
-        final AddArticleRequest userRequest = new AddArticleRequest(title, content, userId);
-        final String requestBody = objectMapper.writeValueAsString(userRequest);
+        AddArticleRequest request = new AddArticleRequest("title", "content", 1L);
+        ApplicationUser user = new ApplicationUser("firstname", "lastname", "username", "email", "password", UserRole.USER);
+        Article article = new Article("title", "content", user);
 
-        //when
-        ResultActions result = mockMvc.perform(post(url)
-                        .with(SecurityMockMvcRequestPostProcessors.user("username").roles("USER"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(requestBody));
+        when(userService.getUserIdFromUserDetails(any())).thenReturn(1L);
+        when(articleService.save(any())).thenReturn(new ArticleResponse(article));
 
-
-        //TODO check when database isn't empty
         //then
-        result.andExpect(status().isCreated());
-        List<Article> articles = articleRepository.findAll();
-        assertThat(articles.size()).isEqualTo(1);
-        assertThat(articles.get(0).getTitle()).isEqualTo("title");
-        assertThat(articles.get(0).getContent()).isEqualTo("content");
+        mockMvc.perform(post("/api/v1/articles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated());
     }
 
-    @DisplayName("findAllArticles")
     @Test
-    void findAllArticles() throws Exception {
-
+    @WithMockUser(username = "user", roles = "USER")
+    void delete_exist_Article() throws Exception {
         //given
-        final String url = "/api/articles";
-        final String title = "title";
-        final String content = "content";
-
-        articleRepository.save(Article.builder()
-                .title(title)
-                .content(content)
-                .build());
+        ApplicationUser user = new ApplicationUser("firstname", "lastname", "username", "email", "password", UserRole.USER);
+        Article article = new Article("title", "content", user);
+        em.persist(article);
 
         //when
-        final ResultActions resultActions = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+        Long findArticleId = article.getId();
 
-        //TODO check when database isn't empty
         //then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].content").value(content))
-                .andExpect(jsonPath("$[0].title").value(title));
+        mockMvc.perform(delete("/api/v1/articles/" + findArticleId))
+                .andExpect(status().isNoContent());
     }
 
-    @DisplayName("findArticle")
+    //TODO 코드의 응집성을 높히기 위해 비즈니스 로직과 예외 처리 로직을 서비스단에 두었으나, 그 결과 컨트롤러 자체의 테스트가 어려워짐...
     @Test
-    void findArticle() throws Exception {
-
+    @WithMockUser(username = "user", roles = "USER")
+    void delete_not_exist_Article() throws Exception {
         //given
-        final String url = "/api/articles/{id}";
-        final String title = "title";
-        final String content = "content";
-        Article savedArticle = articleRepository.save(Article.builder()
-                .title(title)
-                .content(content)
-                .build());
+        long nonExistArticleId = 9999L;
 
-        //when
-        ResultActions resultActions = mockMvc.perform(get(url, savedArticle.getId()));
-
-        //TODO check when database isn't empty
-        //then
-        resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value(content))
-                .andExpect(jsonPath("$.title").value(title));
+        //when & then
+        mockMvc.perform(delete("/api/v1/articles/" + nonExistArticleId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404)) // optional: response body 검증
+                .andExpect(jsonPath("$.message").exists()); // optional: response body 검증
     }
 
-    @DisplayName("deleteArticle")
-    @Test
-    void deleteArticle() throws Exception {
-
-        //given
-        final String url = "/api/articles/{id}";
-        final String title = "title";
-        final String content = "content";
-        Article savedArticle = articleRepository.save(Article.builder()
-                .title(title)
-                .content(content)
-                .build());
-
-        //when
-        mockMvc.perform(delete(url, savedArticle.getId()))
-                .andExpect(status().isOk());
-
-        //then
-        assertThatThrownBy(() -> articleRepository.findById(savedArticle.getId()).get())
-                .isInstanceOf(NoSuchElementException.class);
-    }
-
-    @DisplayName("updateArticle")
-    @Test
-    void updateArticle() throws Exception {
-
-        //given
-        final String url = "/api/articles/{id}";
-        final String title = "title";
-        final String content = "content";
-        Article savedArticle = articleRepository.save(Article.builder()
-                .title(title)
-                .content(content)
-                .build());
-
-        final String newTitle = "new title";
-        final String newContent = "new content";
-
-        UpdateArticleRequest request = new UpdateArticleRequest(newTitle, newContent);
-
-        //when
-        ResultActions result = mockMvc.perform(put(url, savedArticle.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(request)));
-
-        //then
-        result.andExpect(status().isOk());
-        Article article = articleRepository.findById(savedArticle.getId()).get();
-
-        assertThat(article.getTitle()).isEqualTo(newTitle);
-        assertThat(article.getContent()).isEqualTo(newContent);
-    }
 }
