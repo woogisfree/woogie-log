@@ -3,7 +3,7 @@ package com.example.woogisfree.domain.article.controller;
 import com.example.woogisfree.domain.article.dto.AddArticleRequest;
 import com.example.woogisfree.domain.article.dto.ArticleResponse;
 import com.example.woogisfree.domain.article.entity.Article;
-import com.example.woogisfree.domain.article.service.ArticleService;
+import com.example.woogisfree.domain.article.exception.ArticleNotFoundException;
 import com.example.woogisfree.domain.article.service.ArticleServiceImpl;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.entity.UserRole;
@@ -22,6 +22,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -83,18 +84,19 @@ class ArticleControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    //TODO 코드의 응집성을 높히기 위해 비즈니스 로직과 예외 처리 로직을 서비스단에 두었으나, 그 결과 컨트롤러 자체의 테스트가 어려워짐...
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void delete_not_exist_Article() throws Exception {
         //given
         long nonExistArticleId = 9999L;
 
-        //when & then
+        //when
+        doThrow(new ArticleNotFoundException("Article not found")).when(articleService).delete(nonExistArticleId);
+
+        //then
         mockMvc.perform(delete("/api/v1/articles/" + nonExistArticleId))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404)) // optional: response body 검증
-                .andExpect(jsonPath("$.message").exists()); // optional: response body 검증
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").exists());
     }
-
 }
