@@ -8,7 +8,7 @@
 - [x] Article Entity에 createdBy, updatedBy 적용
 - [x] article - comment Service refactoring
 - [ ] Article - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
-- [ ] Test Code 의 실행 순서에 따라 테스트가 실패함 (순서에 의존하지 않도록 수정)
+- [x] Test Code 의 실행 순서에 따라 테스트가 실패함 (순서에 의존하지 않도록 수정)
 - [ ] Comment - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
 - [ ] HTML, CSS 정리
 - [ ] AWS 배포
