@@ -24,13 +24,12 @@ public class CommentServiceImpl implements CommentService {
     private final ArticleRepository articleRepository;
 
     @Override
-    public AddCommentResponse save(AddCommentRequest request) {
-        ApplicationUser user = userService.findUserById(request.getUserId());
-        Article article = articleRepository.findById(request.getArticleId())
-                .orElseThrow(() -> new ArticleNotFoundException("not found : " + request.getArticleId()));
-        Comment comment = request.toEntity(user, article);
+    public AddCommentResponse save(Long articleId, Long userId, AddCommentRequest request) {
+        ApplicationUser user = userService.findUserById(userId);
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ArticleNotFoundException("not found : " + articleId));
 
-        return new AddCommentResponse(comment.getContent(), user.getUsername(), article.getId());
+        return new AddCommentResponse(request.getContent(), user.getUsername(), article.getId());
     }
 
     @Override

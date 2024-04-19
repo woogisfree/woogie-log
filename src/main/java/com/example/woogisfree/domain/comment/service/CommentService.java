@@ -5,7 +5,7 @@ import com.example.woogisfree.domain.comment.dto.AddCommentResponse;
 
 public interface CommentService {
 
-    AddCommentResponse save(AddCommentRequest request);
+    AddCommentResponse save(Long articleId, Long userId, AddCommentRequest request);
 
     void update(long commentId, String content);
 
