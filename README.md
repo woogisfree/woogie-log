@@ -1,22 +1,30 @@
 # Woogie's Toy Project
 
 ## Feature
+### 기능
 - [x] 로그아웃 구현
 - [x] articles CRUD 리팩토링
   - [x] 게시글 생성 버그 해결 (415 Unsupported Media Type)
   - [x] api 단 코드 수정 (Response에 Entity를 직접 반환하는 대신 DTO로 변환하여 반환)
 - [x] Article Entity에 createdBy, updatedBy 적용
 - [x] article - comment Service refactoring
-- [ ] Article - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
-- [x] Test Code 의 실행 순서에 따라 테스트가 실패함 (순서에 의존하지 않도록 수정)
-- [ ] Comment - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
 - [ ] HTML, CSS 정리
-- [ ] AWS 배포
-- [ ] CI/CD (Jenkins / Github Actions / Travis CI 중 택 1)
-
 - [ ] article markdown 적용
 - [ ] article content에 사진, 파일 첨부기능 추가
 - [ ] 웹소켓 적용
+
+### 테스트
+- [ ] Article - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
+- [x] Test Code 의 실행 순서에 따라 테스트가 실패함 (순서에 의존하지 않도록 수정)
+- [ ] Jacoco 적용
+- [ ] Comment - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
+
+### 아키텍처 및 배포
+- [ ] AWS 배포
+- [ ] CI/CD (Jenkins / Github Actions / Travis CI 중 택 1)
+
+### 문서화
+- [ ] Spring Rest docs + Swagger
 
 ## Trouble Shooting - 추후 게시글로 모두 옮길 예정
 - Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생
