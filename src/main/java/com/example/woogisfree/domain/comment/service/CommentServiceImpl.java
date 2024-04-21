@@ -27,22 +27,24 @@ public class CommentServiceImpl implements CommentService {
     public AddCommentResponse save(Long articleId, Long userId, AddCommentRequest request) {
         ApplicationUser user = userService.findUserById(userId);
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ArticleNotFoundException("not found : " + articleId));
-
-        return new AddCommentResponse(request.getContent(), user.getUsername(), article.getId());
+                .orElseThrow(() -> new ArticleNotFoundException("Article with id " + articleId + " not found"));
+        Comment comment = commentRepository.save(new Comment(request.getContent(), user, article));
+        return new AddCommentResponse(comment.getContent(), comment.getUser().getUsername(), comment.getArticle().getId());
     }
 
     @Override
     public void update(long commentId, String content) {
         commentRepository.findById(commentId)
                 .ifPresentOrElse(comment -> comment.updateContent(content),
-                        CommentNotFoundException::new);
+                        () -> {
+                            throw new CommentNotFoundException("Comment with id " + commentId + " not found");
+                });
     }
 
     @Override
     public void delete(long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " not found));"));
         commentRepository.delete(comment);
     }
 }

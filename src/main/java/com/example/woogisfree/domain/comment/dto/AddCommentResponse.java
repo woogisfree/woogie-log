@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddCommentResponse {
-    private Long id;
     private String content;
     private String username;
     private Long articleId;
