@@ -11,12 +11,14 @@ public class CommentResponse {
     private Long commentId;
     private String content;
     private LocalDateTime createdDate;
+    private String createdBy;
     private boolean isEdited;
 
-    public CommentResponse(Long commentId, String content, LocalDateTime createdDate, boolean isEdited) {
+    public CommentResponse(Long commentId, String content, LocalDateTime createdDate, String createdBy, boolean isEdited) {
         this.commentId = commentId;
         this.content = content;
         this.createdDate = createdDate;
+        this.createdBy = createdBy;
         this.isEdited = isEdited;
     }
 
@@ -26,6 +28,7 @@ public class CommentResponse {
                         comment.getId(),
                         comment.getContent(),
                         comment.getCreatedAt(),
+                        comment.getCreatedBy(),
                         comment.getIsEdited() != null ? comment.getIsEdited() : false
                 ))
                 .toList();
