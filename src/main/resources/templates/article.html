@@ -32,13 +32,22 @@
                         class="btn btn-secondary btn-sm">삭제
                 </button>
                 <button type="button" class="btn btn-success btn-sm"
-                        th:onclick="|location.href='@{/articles}'|">목록으로</button>
+                        th:onclick="|location.href='@{/articles}'|">목록으로
+                </button>
             </article>
-<!--            comment 목록 (수정, 삭제 가능)-->
-            <comment-list th:align="center">
-
+            <!--            comment 목록 (수정, 삭제 가능)-->
+            <comment-list th:align="center" th:each="comment : ${article.comments}">
+                <div class="card mt-2">
+                    <div class="card-header" >
+                        <p class="card-text" th:text="${comment.createdBy}"></p>
+                        <p class="card-text text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${comment.content}"></h5>
+                    </div>
+                </div>
             </comment-list>
-<!--            comment 등록-->
+            <!--            comment 등록-->
             <comment-form th:align="center">
 
             </comment-form>
@@ -48,3 +57,4 @@
 
 <script src="/js/article.js"></script>
 </body>
+</html>
