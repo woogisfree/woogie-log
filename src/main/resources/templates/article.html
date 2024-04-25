@@ -35,10 +35,23 @@
                         th:onclick="|location.href='@{/articles}'|">목록으로
                 </button>
             </article>
+            <!--            comment 등록-->
+            <new-comment-form>
+                <div class="form-group">
+                    <h5 style="margin: 1rem 0" th:text="${article.comments.size()}  + '개의 댓글'"></h5>
+                    <textarea placeholder="댓글을 작성하세요" type="text" class="form-control" style="height: 70px; padding: 1rem 1rem 1.5rem; margin-bottom: 1rem; border-radius: 4px"></textarea>
+                    <div style="display: flex; justify-content: flex-end">
+                        <button type="button" id="create-comment-btn"
+                                class="btn btn-secondary btn-sm mb-3">댓글 등록
+                        </button>
+                    </div>
+                </div>
+            </new-comment-form>
+
             <!--            comment 목록 (수정, 삭제 가능)-->
             <comment-list th:align="center" th:each="comment : ${article.comments}">
                 <div class="card mt-2">
-                    <div class="card-header" >
+                    <div class="card-header">
                         <p class="card-text" th:text="${comment.createdBy}"></p>
                         <p class="card-text text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
                     </div>
@@ -47,11 +60,6 @@
                     </div>
                 </div>
             </comment-list>
-
-            <!--            comment 등록-->
-            <comment-form th:align="center">
-
-            </comment-form>
         </div>
     </div>
 </div>
