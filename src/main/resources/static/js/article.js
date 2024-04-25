@@ -63,3 +63,13 @@ if (createButton) {
         })
     })
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.querySelector('textarea');
+    textarea.addEventListener('keydown', autoResize, false);
+
+    function autoResize() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    }
+})
