@@ -35,7 +35,6 @@
                         th:onclick="|location.href='@{/articles}'|">목록으로
                 </button>
             </article>
-            <!--            comment 등록-->
             <new-comment-form>
                 <div class="form-group">
                     <h5 style="margin: 1rem 0" th:text="${article.comments.size()}  + '개의 댓글'"></h5>
@@ -48,34 +47,40 @@
                     </div>
                 </div>
             </new-comment-form>
-
-            <!--            comment 목록 (수정, 삭제 가능)-->
-            <comment-list th:each="comment : ${article.comments}">
-                <div class="card mt-2">
+            <comment-list>
+                <div th:each="comment : ${article.comments}" class="card mt-2">
                     <input type="hidden" id="comment-id" th:value="${comment.commentId}">
-                    <div class="card-header">
-                        <div class="profile">
-                            <p class="card-text" th:text="${comment.createdBy}"></p>
-                            <p class="card-text text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
+                    <div class="card-header" style="display: flex; justify-content: space-between">
+                        <div class="profile" style="display: flex; align-items: center">
+                            <a href="/" class="user-image">
+                                <img src="https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/09/18/1e586277-48ba-4e8a-9b98-d8cdbe075d86.jpg"
+                                     alt="comment-user-thumbnail">
+                            </a>
+                            <div class="comment-info" style="margin-left: 1rem">
+                                <div class="username">
+                                    <a href="/" th:text="${comment.createdBy}"></a>
+                                </div>
+                                <div class="date card-text text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
+                            </div>
                         </div>
-                        <div th:if="${comment.createdBy == currentUser.getUsername()}" class="action">
-                            <button type="button" id="modify-comment-btn"
-                                    class="btn btn-primary btn-sm">수정
-                            </button>
-                            <button type="button" id="delete-comment-btn"
-                                    class="btn btn-secondary btn-sm">삭제
-                            </button>
+                        <div class="actions" th:if="${comment.createdBy == currentUser.getUsername()}">
+                            <span type="button" id="modify-comment-btn" class="btn btn-primary btn-sm">수정</span>
+                            <span type="button" id="delete-comment-btn" class="btn btn-secondary btn-sm">삭제</span>
                         </div>
                     </div>
                     <div class="card-body">
-                        <p class="card-text" th:text="${comment.content}"></p>
+                        <p class="content card-text" th:text="${comment.content}"></p>
                     </div>
+                    <!--                    답글-->
+                    <!--                    <div class="답글"></div>-->
                 </div>
             </comment-list>
         </div>
     </div>
 </div>
+<style>
 
+</style>
 <script src="/js/article.js"></script>
 </body>
 </html>
