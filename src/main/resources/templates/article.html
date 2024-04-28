@@ -39,7 +39,8 @@
             <new-comment-form>
                 <div class="form-group">
                     <h5 style="margin: 1rem 0" th:text="${article.comments.size()}  + '개의 댓글'"></h5>
-                    <textarea id="comment-content" placeholder="댓글을 작성하세요" type="text" class="form-control" style="height: 70px; padding: 1rem 1rem 1.5rem; margin-bottom: 1rem; border-radius: 4px"></textarea>
+                    <textarea id="comment-content" placeholder="댓글을 작성하세요" type="text" class="form-control"
+                              style="height: 70px; padding: 1rem 1rem 1.5rem; margin-bottom: 1rem; border-radius: 4px"></textarea>
                     <div style="display: flex; justify-content: flex-end">
                         <button type="button" id="create-comment-btn"
                                 class="btn btn-secondary btn-sm mb-3">댓글 작성
@@ -49,14 +50,25 @@
             </new-comment-form>
 
             <!--            comment 목록 (수정, 삭제 가능)-->
-            <comment-list th:align="center" th:each="comment : ${article.comments}">
+            <comment-list th:each="comment : ${article.comments}">
                 <div class="card mt-2">
+                    <input type="hidden" id="comment-id" th:value="${comment.commentId}">
                     <div class="card-header">
-                        <p class="card-text" th:text="${comment.createdBy}"></p>
-                        <p class="card-text text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
+                        <div class="profile">
+                            <p class="card-text" th:text="${comment.createdBy}"></p>
+                            <p class="card-text text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></p>
+                        </div>
+                        <div th:if="${comment.createdBy == currentUser.getUsername()}" class="action">
+                            <button type="button" id="modify-comment-btn"
+                                    class="btn btn-primary btn-sm">수정
+                            </button>
+                            <button type="button" id="delete-comment-btn"
+                                    class="btn btn-secondary btn-sm">삭제
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${comment.content}"></h5>
+                        <p class="card-text" th:text="${comment.content}"></p>
                     </div>
                 </div>
             </comment-list>
