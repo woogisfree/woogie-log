@@ -79,8 +79,8 @@ const createCommentButton = document.getElementById('create-comment-btn');
 if (createCommentButton) {
     createCommentButton.addEventListener('click', event => {
         event.preventDefault();
-        let articleId = document.getElementById('article-id').value;
-        let content = document.getElementById('comment-content').value;
+        let articleId = document.getElementById('article-id');
+        let content = document.getElementById('comment-content');
 
         fetch(`/api/v1/comments/${articleId}`, {
             method: 'POST',
@@ -96,6 +96,37 @@ if (createCommentButton) {
     })
 }
 
-// 댓글 수정, 삭제 버튼 -> js
-// 방금 전 https://velog.io/@nanyong0214/JS%EC%8B%9C%EA%B0%84-%EA%B3%84%EC%82%B0-%ED%91%9C%EC%8B%9C
-// 댓글 ui 수정
+if (modifyCommentButton) {
+    modifyCommentButton.addEventListener('click', event => {
+
+        let articleId = document.getElementById('article-id');
+        let commentId = document.getElementById('comment-id');
+        let content = document.getElementById('comment-content');
+
+        fetch(`/api/v1/comments/${commentId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: content,
+            }),
+        }).then(() => {
+            location.replace('/articles/' + articleId);
+        })
+    });
+}
+
+if (deleteCommentButton) {
+    deleteCommentButton.addEventListener('click', event => {
+
+        let articleId = document.getElementById('article-id');
+        let commentId = document.getElementById('comment-id');
+
+        fetch(`/api/v1/comments/${commentId}`, {
+            method: 'DELETE',
+        }).then(() => {
+            location.replace('/articles/' + articleId);
+        })
+    });
+}
