@@ -2,9 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${article.title}">Article11</title>
+    <title th:text="${article.title}"></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
+<style>
+    .user-image img {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+</style>
 <body>
 <div class="p-5 mb-5 text-center</> bg-light">
     <h1 class="mb-3">My Blog</h1>
@@ -50,7 +58,7 @@
             <comment-list>
                 <div th:each="comment : ${article.comments}" class="card mt-2">
                     <input type="hidden" id="comment-id" th:value="${comment.commentId}">
-                    <div class="card-header" style="display: flex; justify-content: space-between">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center">
                         <div class="profile" style="display: flex; align-items: center">
                             <a href="/" class="user-image">
                                 <img src="https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/09/18/1e586277-48ba-4e8a-9b98-d8cdbe075d86.jpg"
@@ -70,6 +78,7 @@
                     </div>
                     <div class="card-body">
                         <p class="content card-text" th:text="${comment.content}"></p>
+                        <textarea class="edit-comment" style="display: none"></textarea>
                     </div>
                     <!--                    답글-->
                     <!--                    <div class="답글"></div>-->
@@ -78,9 +87,6 @@
         </div>
     </div>
 </div>
-<style>
-
-</style>
 <script src="/js/article.js"></script>
 </body>
 </html>
