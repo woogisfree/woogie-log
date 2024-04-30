@@ -56,8 +56,8 @@
                 </div>
             </new-comment-form>
             <comment-list>
-                <div th:each="comment : ${article.comments}" class="card mt-2">
-                    <input type="hidden" id="comment-id" th:value="${comment.commentId}">
+                <div id="comment" th:each="comment : ${article.comments}" class="card mt-2">
+                    <input type="hidden" class="comment-id" th:value="${comment.commentId}">
                     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center">
                         <div class="profile" style="display: flex; align-items: center">
                             <a href="/" class="user-image">
@@ -68,12 +68,13 @@
                                 <div class="username">
                                     <a href="/" th:text="${comment.createdBy}"></a>
                                 </div>
-                                <div class="date card-text text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
+                                <div class="date card-text text-muted"
+                                     th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
                             </div>
                         </div>
                         <div class="actions" th:if="${comment.createdBy == currentUser.getUsername()}">
-                            <span type="button" id="modify-comment-btn" class="btn btn-primary btn-sm">수정</span>
-                            <span type="button" id="delete-comment-btn" class="btn btn-secondary btn-sm">삭제</span>
+                            <button id="modify-comment-btn" class="btn btn-primary btn-sm">수정</button>
+                            <button id="delete-comment-btn" class="btn btn-secondary btn-sm">삭제</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -88,5 +89,6 @@
     </div>
 </div>
 <script src="/js/article.js"></script>
+<script src="/js/comment.js"></script>
 </body>
 </html>
