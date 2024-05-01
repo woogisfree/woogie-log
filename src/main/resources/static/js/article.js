@@ -73,3 +73,25 @@ window.addEventListener('DOMContentLoaded', () => {
         this.style.height = this.scrollHeight + 'px';
     }
 })
+
+function timeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = (now.getTime() - date.getTime()) / 1000;
+
+    if (diff <= 60) {
+        return '방금 전';
+    } else if (diff < 3600) {
+        return parseInt(diff / 60) + '분 전';
+    } else if (diff < 86400) {
+        return parseInt(diff / 3600) + '시간 전';
+    } else if (diff < 604800) {
+        return parseInt(diff / 86400) + '일 전';
+    }
+    return dateString;
+}
+
+document.querySelectorAll('.comment-date').forEach(dateElement => {
+    const dateString = dateElement.textContent;
+    dateElement.textContent = timeAgo(dateString);
+})

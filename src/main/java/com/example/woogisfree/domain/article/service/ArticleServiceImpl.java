@@ -63,7 +63,6 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.deleteById(article.getId());
     }
 
-    //TODO ifpresentorelse 추가
     @Override
     @Transactional
     public ArticleResponse update(long id, UpdateArticleRequest request) {
