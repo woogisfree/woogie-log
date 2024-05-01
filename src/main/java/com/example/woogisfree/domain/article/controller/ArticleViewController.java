@@ -37,7 +37,6 @@ public class ArticleViewController {
         return "articleList";
     }
 
-    //TODO CommentList 를 반환할 수 있게 되었는데, 아래 커맨트 추가해서 잘 동작하는지 확인해야함
     @GetMapping("/articles/{id}")
     public String getArticle(@PathVariable long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         ArticleWithCommentResponse article = articleService.findById(id);

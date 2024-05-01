@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,12 +43,15 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleWithCommentResponse findById(long id) {
         Article article = articleRepository.findAllById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("not found : " + id));
+
         return ArticleWithCommentResponse.builder()
                 .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
                 .createdAt(article.getCreatedAt())
-                .comments(article.getCommentList())
+                .comments(article.getCommentList().stream()
+                        .sorted(Comparator.comparing(comment -> comment.getCreatedAt()))
+                        .collect(Collectors.toList()))
                 .build();
     }
 
