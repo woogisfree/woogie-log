@@ -21,6 +21,86 @@ if (createCommentButton) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    const modifyCommentButtons = document.querySelectorAll('#modify-comment-btn');
+
+    modifyCommentButtons.forEach(button => {
+        button.addEventListener('click', event => {
+            const card = event.target.closest('.card');
+            const content = card.querySelector('.content');
+            const realModifyButton = card.querySelector('#real-modify-comment-btn');
+            const cancelButton = card.querySelector('#cancel-comment-btn');
+
+            button.style.display = 'none';
+            content.style.display = 'none';
+
+            const textarea = card.querySelector('.edit-comment');
+            textarea.style.display = 'block';
+            realModifyButton.style.display = 'block';
+            cancelButton.style.display = 'block';
+
+            textarea.value = content.textContent;
+            textarea.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    const realModifyButtons = document.querySelectorAll('#real-modify-comment-btn');
+
+    realModifyButtons.forEach(button => {
+        button.addEventListener('click', event => {
+            const card = event.target.closest('.card');
+            const commentId = card.querySelector('.comment-id').value;
+            const textarea = card.querySelector('.edit-comment');
+            const cancelButton = card.querySelector('#cancel-comment-btn');
+            const newContent = textarea.value;
+
+            fetch(`/api/v1/comments/${commentId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: newContent,
+                }),
+            }).then(() => {
+                const content = card.querySelector('.content');
+                content.textContent = newContent;
+
+                textarea.style.display = 'none';
+                button.style.display = 'none';
+
+                const modifyButton = card.querySelector('#modify-comment-btn');
+                modifyButton.style.display = 'inline';
+                content.style.display = 'block';
+                cancelButton.style.display = 'none';
+            })
+        });
+    });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    const cancelButtonButtons = document.querySelectorAll('#cancel-comment-btn');
+
+    cancelButtonButtons.forEach(button => {
+        button.addEventListener('click', event => {
+            const card = event.target.closest('.card');
+            const content = card.querySelector('.content');
+            const realModifyButton = card.querySelector('#real-modify-comment-btn');
+            const modifyButton = card.querySelector('#modify-comment-btn');
+
+            const textarea = card.querySelector('.edit-comment');
+            textarea.style.display = 'none';
+            realModifyButton.style.display = 'none';
+            button.style.display = 'none';
+
+            modifyButton.style.display = 'inline';
+            content.style.display = 'block';
+        });
+    });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
     const deleteCommentButtons = document.querySelectorAll('#delete-comment-btn');
 
     deleteCommentButtons.forEach(button => {
