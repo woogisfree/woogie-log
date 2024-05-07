@@ -2,35 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>markdown</title>
+    <title>Markdown Editor</title>
+    <style>
+        #editor-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        #editor, #preview {
+            width: 45%;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
-<div id="markdownContent">
-    # 제목입니다
-
-    이곳에 *마크다운*을 작성하세요.
+<div id="editor-container">
+    <!-- 왼쪽 영역: 텍스트 입력 -->
+    <textarea id="editor" placeholder="Markdown을 입력하세요..."></textarea>
+    <!-- 오른쪽 영역: 미리보기 -->
+    <div id="preview"></div>
 </div>
-
-<div id="renderedContent"></div>
-
+<script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
 <script>
-    const markdownContent = document.getElementById('markdownContent');
-    const renderedContent = document.getElementById('renderedContent');
+    // marked 라이브러리 로드 완료 후 실행될 코드
+    // document.addEventListener('DOMContentLoaded', function() {
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
 
-    // 마크다운을 HTML로 변환하여 렌더링하는 함수
-    function renderMarkdown() {
-        const markdownText = markdownContent.innerText;
-        const htmlText = marked(markdownText);
-        renderedContent.innerHTML = htmlText;
-    }
-
-    // 초기 렌더링
-    renderMarkdown();
-
-    // 텍스트 변경 감지하여 다시 렌더링
-    markdownContent.addEventListener('input', renderMarkdown);
-
+        editor.addEventListener('input', function() {
+            const markdownText = editor.value;
+            const htmlText = marked(markdownText);
+            preview.innerHTML = htmlText;
+        // });
+    });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>

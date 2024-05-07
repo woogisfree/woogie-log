@@ -56,4 +56,9 @@ public class ArticleViewController {
         }
         return "newArticle";
     }
+
+    @GetMapping("/markdown")
+    public String markdown() {
+        return "markdowntest";
+    }
 }
