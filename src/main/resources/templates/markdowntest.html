@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>markdown</title>
+</head>
+<body>
+<div id="markdownContent">
+    # 제목입니다
+
+    이곳에 *마크다운*을 작성하세요.
+</div>
+
+<div id="renderedContent"></div>
+
+<script>
+    const markdownContent = document.getElementById('markdownContent');
+    const renderedContent = document.getElementById('renderedContent');
+
+    // 마크다운을 HTML로 변환하여 렌더링하는 함수
+    function renderMarkdown() {
+        const markdownText = markdownContent.innerText;
+        const htmlText = marked(markdownText);
+        renderedContent.innerHTML = htmlText;
+    }
+
+    // 초기 렌더링
+    renderMarkdown();
+
+    // 텍스트 변경 감지하여 다시 렌더링
+    markdownContent.addEventListener('input', renderMarkdown);
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</body>
+</html>
