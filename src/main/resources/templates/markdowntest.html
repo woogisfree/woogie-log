@@ -6,12 +6,11 @@
     <style>
         #editor-container {
             display: flex;
-            justify-content: space-around;
+            /*justify-content: space-around;*/
             margin-top: 20px;
         }
         #editor, #preview {
-            width: 45%;
-            height: 300px;
+            height: 100%;
             border: 1px solid #ccc;
             padding: 10px;
             box-sizing: border-box;
@@ -22,9 +21,11 @@
 <body>
 <div id="editor-container">
     <!-- 왼쪽 영역: 텍스트 입력 -->
+    <form style="width: 50%">
     <textarea id="editor" placeholder="Markdown을 입력하세요..."></textarea>
+    </form>
     <!-- 오른쪽 영역: 미리보기 -->
-    <div id="preview"></div>
+    <div style="width: 50%" id="preview"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
