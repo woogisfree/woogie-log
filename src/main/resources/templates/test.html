@@ -34,6 +34,10 @@
                     <section class="mb-5" id="editor-container">
                         <textarea class="form-control h-25" rows="10" placeholder="content" id="editor" th:value="${article.content}"></textarea>
                         <div id="preview"></div>
+
+
+
+
                     </section>
                     <button th:if="${article.articleId == null}" type="submit" id="create-btn" class="btn btn-primary btn-sm">등록</button>
                     <button th:if="${article.articleId != null}" type="submit" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
