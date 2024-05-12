@@ -22,6 +22,8 @@
                     <section class="mb-5">
                         <textarea class="form-control h-25" rows="10" placeholder="content" id="content" name="content"
                                   th:value="${article.content}"></textarea>
+
+
                     </section>
                     <button th:if="${article.articleId == null}" type="submit" id="create-btn" class="btn btn-primary btn-sm">등록</button>
                     <button th:if="${article.articleId != null}" type="submit" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
