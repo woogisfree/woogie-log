@@ -4,29 +4,53 @@
     <meta charset="UTF-8">
     <title>New Article</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+        #editor-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        #content, #preview {
+            min-height: 300px;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        #left-column, #right-column {
+            width: 50%;
+        }
+    </style>
 </head>
 <body>
 <div class="p-5 mb-5 text-center</> bg-light">
     <h1 class="mb-3">My Blog</h1>
 </div>
-
-<div class="container mt-5" style="text-align: right">
+<div class="container mt-5" style="text-align: left">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <article>
                 <input type="hidden" id="article-id" th:value="${article.articleId}">
                 <form th:action="@{/api/v1/articles}" method="post" id="create-article-form">
-                    <header class="mb-4">
-                        <input type="text" class="form-control" placeholder="title" id="title" name="title" th:value="${article.title}">
-                    </header>
-                    <section class="mb-5">
-                        <textarea class="form-control h-25" rows="10" placeholder="content" id="content" name="content"
-                                  th:value="${article.content}"></textarea>
-
-
-                    </section>
-                    <button th:if="${article.articleId == null}" type="submit" id="create-btn" class="btn btn-primary btn-sm">등록</button>
-                    <button th:if="${article.articleId != null}" type="submit" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
+                    <div id="editor-container">
+                        <div id="left-column">
+                            <header class="mb-4">
+                                <input type="text" class="form-control" placeholder="title" id="title" name="title" th:value="${article.title}">
+                            </header>
+                            <section class="mb-5">
+                                <textarea class="form-control h-25" rows="10" placeholder="content" id="content" name="content"
+                                          th:value="${article.content}"></textarea>
+                            </section>
+                        </div>
+                        <div id="right-column">
+                            <div class="form-control h-25" id="preview"></div>
+                        </div>
+                    </div>
+                    <div style="text-align: right">
+                        <button th:if="${article.articleId == null}" type="submit" id="create-btn" class="btn btn-primary btn-sm">등록</button>
+                        <button th:if="${article.articleId != null}" type="submit" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
+                    </div>
                 </form>
             </article>
         </div>
@@ -34,4 +58,29 @@
 </div>
 </body>
 <script src="/js/article.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
+<script>
+    const editor = document.getElementById('content');
+    const preview = document.getElementById('preview');
+
+    editor.addEventListener('input', function() {
+        const markdownText = editor.value;
+        const htmlText = marked(markdownText);
+        preview.innerHTML = htmlText;
+    });
+
+    editor.addEventListener('keydown', function(event) {
+        if (event.key === 'Tab') {
+            event.preventDefault();
+
+            // 현재 커서 위치 구하기
+            const { selectionStart, selectionEnd } = editor;
+            const indent = '    '; // 4칸 공백
+            // 텍스트에 들여쓰기 적용
+            editor.value = editor.value.substring(0, selectionStart) + indent + editor.value.substring(selectionEnd);
+            // 커서 위치 조정
+            editor.selectionStart = editor.selectionEnd = selectionStart + indent.length;
+        }
+    });
+</script>
 </html>
