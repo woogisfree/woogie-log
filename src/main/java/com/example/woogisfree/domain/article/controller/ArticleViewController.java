@@ -56,10 +56,4 @@ public class ArticleViewController {
         }
         return "newArticle";
     }
-
-    @GetMapping("/markdown")
-    public String markdown(Model model) {
-        model.addAttribute("article", new ArticleViewResponse());
-        return "markdowntest";
-    }
 }
