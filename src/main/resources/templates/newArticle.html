@@ -11,6 +11,7 @@
             padding-right: 3rem;
             font-size: 2.75rem;
             overflow-y: auto;
+            border: none;
         }
         .content {
             padding: 0 3rem;
@@ -22,7 +23,7 @@
             height: 100vh;
         }
         #right-side {
-            background-color: #f8f8fa;
+            background-color: #FBFDFC;
             padding: 3rem;
         }
     </style>
@@ -31,10 +32,21 @@
     <div class="row" >
         <div class="col-md-6" id="left-side">
             <div class="title">
-                <textarea type="text" id="title" placeholder="제목을 입력하세요" th:value="${article.title}" style="width: 100%"></textarea>
+                <textarea type="text" id="title" placeholder="제목을 입력하세요" th:value="${article.title}" style="width: 100%; border: none"></textarea>
             </div>
             <div class="content">
-                <textarea id="content" class="form-control" rows="10" placeholder="내용을 입력하세요" th:value="${article.content}"></textarea>
+                <textarea id="content" class="form-control" rows="10" placeholder="내용을 입력하세요" th:value="${article.content}" style="border: none"></textarea>
+            </div>
+<!--            전체-->
+            <div style="position: fixed; bottom: 0px; z-index: 10; width: 50vw; height: 4rem; padding-right: 15px">
+<!--                flex 를 위한 Div-->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 1rem; padding-right: 1rem">
+<!--                    나가기-->
+                    <button class="btn btn-secondary"></button>
+<!--                    등록하기-->
+                    <button class="btn btn-success"></button>
+                </div>
+
             </div>
         </div>
         <div class="col-md-6" id="right-side">
