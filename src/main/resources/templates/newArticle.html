@@ -11,10 +11,25 @@
             padding-right: 3rem;
             font-size: 2.75rem;
             overflow-y: auto;
-            border: none;
         }
+
+        #title {
+            width: 100%;
+            border: none;
+            resize: none;
+            outline: none;
+        }
+
         .content {
             padding: 0 3rem;
+        }
+
+        #content {
+            width: 100%;
+            height: 72vh;
+            border: none;
+            resize: none;
+            font-family: monospace;
         }
 
         #left-side {
@@ -22,37 +37,41 @@
             flex-direction: column;
             height: 100vh;
         }
+
         #right-side {
             background-color: #FBFDFC;
             padding: 3rem;
         }
     </style>
+    <script src="https://kit.fontawesome.com/66dbdec221.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="row" >
-        <div class="col-md-6" id="left-side">
-            <div class="title">
-                <textarea type="text" id="title" placeholder="제목을 입력하세요" th:value="${article.title}" style="width: 100%; border: none"></textarea>
-            </div>
-            <div class="content">
-                <textarea id="content" class="form-control" rows="10" placeholder="내용을 입력하세요" th:value="${article.content}" style="border: none"></textarea>
-            </div>
-<!--            전체-->
-            <div style="position: fixed; bottom: 0px; z-index: 10; width: 50vw; height: 4rem; padding-right: 15px">
-<!--                flex 를 위한 Div-->
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 1rem; padding-right: 1rem">
-<!--                    나가기-->
-                    <button class="btn btn-secondary"></button>
-<!--                    등록하기-->
-                    <button class="btn btn-success"></button>
-                </div>
-
-            </div>
+<div class="row">
+    <div class="col-md-6" id="left-side">
+        <input type="hidden" id="article-id" th:value="${article.articleId}">
+        <div class="title">
+            <textarea type="text" id="title" placeholder="제목을 입력하세요" th:value="${article.title}"></textarea>
         </div>
-        <div class="col-md-6" id="right-side">
-            <div id="preview"></div>
+        <div class="content">
+            <textarea id="content" class="form-control" placeholder="내용을 입력하세요" th:value="${article.content}"></textarea>
+        </div>
+        <div class="button" style="position: fixed; bottom: 0px; z-index: 10; width: 50vw; height: 4rem">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 1rem; padding-right: 1rem; box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px; height: 100%">
+                <!--                    나가기-->
+                <button class="btn btn-outline-secondary" style="width: 4rem; height: 3rem">나가기</button>
+                <div>
+                    <!--                        등록-->
+                    <button class="btn btn-outline-success" style="width: 6rem; height: 3rem">등록하기</button>
+                    <!--                        수정-->
+                    <button class="btn btn-outline-primary" style="width: 6rem; height: 3rem">수정하기</button>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="col-md-6" id="right-side">
+        <div id="preview" style="font-family: monospace"></div>
+    </div>
+</div>
 </body>
 <script src="/js/article.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
@@ -67,13 +86,13 @@
     function updatePreview() {
         const titleText = '<h1>' + title.value + '</h1>';
         const contentText = marked(content.value);
-        preview.innerHTML = titleText + '<br></br>' + contentText;
+        preview.innerHTML = titleText + '<br>' + contentText;
     }
 
-    content.addEventListener('keydown', function(event) {
+    content.addEventListener('keydown', function (event) {
         if (event.key === 'Tab') {
             event.preventDefault();
-            const { selectionStart, selectionEnd } = content;
+            const {selectionStart, selectionEnd} = content;
             const indent = '    ';
             content.value = content.value.substring(0, selectionStart) + indent + content.value.substring(selectionEnd);
             content.selectionStart = content.selectionEnd = selectionStart + indent.length;
