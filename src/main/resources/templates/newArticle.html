@@ -22,14 +22,27 @@
         }
 
         .content {
-            padding: 0 3rem;
+            padding: 1rem 3rem;
+            overflow-y: auto;
+            height: 78%;
         }
 
         #content {
             width: 100%;
+            height: 100%;
             border: none;
             resize: none;
             font-family: monospace;
+            border: none;
+            outline: none;
+        }
+
+        .button {
+            position: fixed;
+            bottom: 0px;
+            z-index: 10;
+            width: 49.5vw;
+            height: 4rem;
         }
 
         #preview {
@@ -56,17 +69,16 @@
         <div class="title">
             <textarea type="text" id="title" placeholder="제목을 입력하세요" th:value="${article.title}"></textarea>
         </div>
+<!--        image 삽입 버튼-->
+        <button style="justify-content: right"></button>
         <div class="content">
             <textarea id="content" class="form-control" placeholder="내용을 입력하세요" th:value="${article.content}"></textarea>
         </div>
-        <div class="button" style="position: fixed; bottom: 0px; z-index: 10; width: 50vw; height: 4rem">
+        <div class="button">
             <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 1rem; padding-right: 1rem; box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px; height: 100%">
-                <!--                    나가기-->
                 <button class="btn btn-outline-secondary" style="width: 4rem; height: 3rem">나가기</button>
                 <div>
-                    <!--                        등록-->
                     <button class="btn btn-outline-success" style="width: 6rem; height: 3rem">등록하기</button>
-                    <!--                        수정-->
                     <button class="btn btn-outline-primary" style="width: 6rem; height: 3rem">수정하기</button>
                 </div>
             </div>
