@@ -48,6 +48,8 @@
 
         #preview {
             word-wrap: break-word;
+            overflow-y: auto;
+            height: 100%;
         }
 
         #left-side {
@@ -68,6 +70,7 @@
         #right-side {
             background-color: #FBFDFC;
             padding: 3rem;
+            height: 100vh;
         }
     </style>
 </head>
@@ -78,11 +81,13 @@
         <div class="title">
             <textarea type="text" id="title" placeholder="제목을 입력하세요" th:value="${article.title}"></textarea>
         </div>
-        <button class="image-button">
-            <i class="fa-solid fa-image fa-lg"></i>
-        </button>
+        <div>
+            <button class="image-button">
+                <i class="fa-solid fa-image fa-lg"></i>
+            </button>
+        </div>
         <div class="content">
-            <textarea id="content" class="form-control" placeholder="내용을 입력하세요" th:value="${article.content}"></textarea>
+            <textarea id="content" placeholder="내용을 입력하세요" th:value="${article.content}"></textarea>
         </div>
         <div class="button">
             <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 1rem; padding-right: 1rem; box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px; height: 100%">
@@ -126,3 +131,6 @@
     });
 </script>
 </html>
+
+<!--left-side scroll bug-->
+<!--등록, 수정, 이미지 작업-->
