@@ -79,7 +79,7 @@
     <div class="col-md-6" id="left-side">
         <input type="hidden" id="article-id" th:value="${article.articleId}">
         <div class="title">
-            <textarea type="text" id="title" placeholder="제목을 입력하세요" th:value="${article.title}"></textarea>
+            <textarea type="text" id="title" placeholder="제목을 입력하세요" th:text="${article.title}"></textarea>
         </div>
         <div>
             <button class="image-button">
@@ -87,14 +87,14 @@
             </button>
         </div>
         <div class="content">
-            <textarea id="content" placeholder="내용을 입력하세요" th:value="${article.content}"></textarea>
+            <textarea id="content" placeholder="내용을 입력하세요" th:text="${article.content}"></textarea>
         </div>
         <div class="button">
             <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 1rem; padding-right: 1rem; box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px; height: 100%">
                 <button id="quit-button" class="btn btn-outline-secondary" style="width: 4rem; height: 3rem">나가기</button>
                 <div>
-                    <button id="create-btn" class="btn btn-outline-success" style="width: 6rem; height: 3rem">등록하기</button>
-                    <button id="modify-btn" class="btn btn-outline-primary" style="width: 6rem; height: 3rem">수정하기</button>
+                    <button id="create-btn" th:if="${article.articleId} == null" class="btn btn-outline-success" style="width: 6rem; height: 3rem">등록하기</button>
+                    <button id="modify-btn" th:if="${article.articleId} != null" class="btn btn-outline-primary" style="width: 6rem; height: 3rem">수정하기</button>
                 </div>
             </div>
         </div>
@@ -129,6 +129,8 @@
             content.selectionStart = content.selectionEnd = selectionStart + indent.length;
         }
     });
+
+    updatePreview();
 </script>
 </html>
 
