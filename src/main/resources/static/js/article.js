@@ -96,14 +96,16 @@ document.querySelectorAll('.comment-date').forEach(dateElement => {
     dateElement.textContent = timeAgo(dateString);
 })
 
-document.getElementById('quit-button').addEventListener('click', event => {
-    console.log(document.getElementById('article-id').value);
-    event.preventDefault();
-    const articleId = document.getElementById('article-id').value;
-    if (articleId === '') {
-        location.replace('/articles');
-        return;
-    }
-    location.replace(`/articles/${articleId}`);
-})
-
+const quitButton = document.getElementById('quit-button')
+if (quitButton) {
+    quitButton.addEventListener('click', event => {
+        console.log(document.getElementById('article-id').value);
+        event.preventDefault();
+        const articleId = document.getElementById('article-id').value;
+        if (articleId === '') {
+            location.replace('/articles');
+            return;
+        }
+        location.replace(`/articles/${articleId}`);
+    })
+}
