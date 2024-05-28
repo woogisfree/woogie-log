@@ -8,8 +8,8 @@
   - [x] api 단 코드 수정 (Response에 Entity를 직접 반환하는 대신 DTO로 변환하여 반환)
 - [x] Article Entity에 createdBy, updatedBy 적용
 - [x] article - comment Service refactoring
-- [ ] HTML, CSS 정리
-- [ ] article markdown 적용
+- [x] HTML, CSS 정리
+- [x] article markdown 적용
 - [ ] article content에 사진, 파일 첨부기능 추가
 - [ ] 웹소켓 적용
 
