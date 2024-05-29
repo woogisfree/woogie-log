@@ -10,7 +10,9 @@
 - [x] article - comment Service refactoring
 - [x] HTML, CSS 정리
 - [x] article markdown 적용
-- [ ] article content에 사진, 파일 첨부기능 추가
+- [ ] article content에 사진 첨부기능 추가
+- [ ] articleList html 정리
+- [ ] 게시글 목록 필터링, 검색 기능 추가
 - [ ] 웹소켓 적용
 
 ### 테스트
