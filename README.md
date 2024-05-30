@@ -10,9 +10,12 @@
 - [x] article - comment Service refactoring
 - [x] HTML, CSS 정리
 - [x] article markdown 적용
+- [ ] Spring Security 적용 위치 변경
 - [ ] article content에 사진 첨부기능 추가
 - [ ] articleList html 정리
 - [ ] 게시글 목록 필터링, 검색 기능 추가
+- [ ] 마이페이지
+- [ ] 회원 권한 추가, velog 글 크롤링 작업
 - [ ] 웹소켓 적용
 
 ### 테스트
