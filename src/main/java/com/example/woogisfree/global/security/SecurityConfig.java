@@ -23,6 +23,7 @@ public class SecurityConfig {
             "/sign-up",
             "/api/v1/sign-in",
             "/api/v1/sign-up",
+            "/articles",
 
             //html, css, js
             "/webjars/**",
