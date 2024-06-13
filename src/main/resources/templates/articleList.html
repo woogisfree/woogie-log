@@ -9,6 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Oswald:wght@500&display=swap" rel="stylesheet">
 </head>
 <style>
+    #sign-in, #sign-out {
+        height: 2rem;
+        border-radius: 1rem;
+    }
+
     .container2 {
         display: grid;
         grid-gap: 40px;
@@ -32,8 +37,9 @@
 <body>
 <header class="p-5 mb-5 text-center bg-light" style="display: flex; justify-content: space-between; margin: 0 auto">
     <h1 class="mb-3 oswald-header" >woogielog</h1>
-    <form th:action="@{/sign-out}" method="post">
-        <button class="btn btn-secondary btn-sm mb-3">Sign Out</button>
+    <a id="sign-in" th:if="${currentUser == null}" href="/sign-in" class="btn btn-secondary btn-sm">Sign In</a>
+    <form th:if="${currentUser != null}" th:action="@{/sign-out}" method="post">
+        <button id="sign-out" class="btn btn-secondary btn-sm">Sign Out</button>
     </form>
 </header>
 <div class="container">

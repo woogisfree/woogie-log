@@ -28,12 +28,17 @@ public class ArticleViewController {
     private final UserService userService;
 
     @GetMapping("/articles")
-    public String getArticles(Model model) {
+    public String getArticles(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         List<ArticleSummaryResponse> articles = articleService.findAll()
                 .stream()
                 .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
                 .collect(Collectors.toList());
         model.addAttribute("articles", articles);
+
+        if (userDetails != null) {
+            ApplicationUser currentUser = userService.findUserById(userService.getUserIdFromUserDetails(userDetails));
+            model.addAttribute("currentUser", currentUser);
+        }
         return "articleList";
     }
 
@@ -41,6 +46,8 @@ public class ArticleViewController {
     public String getArticle(@PathVariable long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         ArticleWithCommentResponse article = articleService.findById(id);
         model.addAttribute("article", article);
+
+        log.info("userDetails: {}", userDetails);
 
         ApplicationUser currentUser = userService.findUserById(userService.getUserIdFromUserDetails(userDetails));
         model.addAttribute("currentUser", currentUser);
