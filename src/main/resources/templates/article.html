@@ -76,7 +76,7 @@
                                      th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
                             </div>
                         </div>
-                        <div class="actions" th:if="${currentUser != null and comment.createdBy == currentUser.getUsername()}">
+                        <div class="actions" th:if="${comment.createdBy == currentUser}">
                             <button id="modify-comment-btn" class="btn btn-primary btn-sm">수정</button>
                             <button id="delete-comment-btn" class="btn btn-secondary btn-sm">삭제</button>
                         </div>

@@ -50,7 +50,7 @@ public class ArticleViewController {
 
         if (userDetails != null) {
             ApplicationUser currentUser = userService.findUserById(userService.getUserIdFromUserDetails(userDetails));
-            model.addAttribute("currentUser", currentUser);
+            model.addAttribute("currentUser", currentUser.getUsername());
         }
         return "article";
     }
