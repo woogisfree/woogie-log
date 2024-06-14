@@ -18,12 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private static final String[] PERMIT_URL_ARRAY = {
-            "/",
-            "/sign-in",
-            "/sign-up",
-            "/api/v1/sign-in",
-            "/api/v1/sign-up",
-            "/articles",
+            "/**",
 
             //html, css, js
             "/webjars/**",

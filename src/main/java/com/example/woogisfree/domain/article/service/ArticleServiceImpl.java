@@ -49,6 +49,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .title(article.getTitle())
                 .content(article.getContent())
                 .createdAt(article.getCreatedAt())
+                .createdBy(article.getCreatedBy())
                 .comments(article.getCommentList().stream()
                         .sorted(Comparator.comparing(comment -> comment.getCreatedAt()))
                         .collect(Collectors.toList()))

@@ -5,6 +5,7 @@ import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import com.example.woogisfree.domain.article.dto.ArticleWithCommentResponse;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
+import com.example.woogisfree.domain.user.exception.UserNotFoundException;
 import com.example.woogisfree.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +48,10 @@ public class ArticleViewController {
         ArticleWithCommentResponse article = articleService.findById(id);
         model.addAttribute("article", article);
 
-        log.info("userDetails: {}", userDetails);
-
-        ApplicationUser currentUser = userService.findUserById(userService.getUserIdFromUserDetails(userDetails));
-        model.addAttribute("currentUser", currentUser);
+        if (userDetails != null) {
+            ApplicationUser currentUser = userService.findUserById(userService.getUserIdFromUserDetails(userDetails));
+            model.addAttribute("currentUser", currentUser);
+        }
         return "article";
     }
 

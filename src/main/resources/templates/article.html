@@ -27,7 +27,7 @@
                 <header class="mb-4">
                     <h1 class="fw-bolder mb-1" th:text="${article.title}" th:align="center"></h1>
                     <div class="information">
-                        <span id="current-user" th:text="${currentUser.getUsername()}"></span>
+                        <span id="created-by" th:text="${article.createdBy}"></span>
                         <span class="separator">·</span>
                         <span class="article-date text-muted fst-italic mb-2" th:align="right"
                              th:text="${#temporals.format(article.createdAt, 'yyyy년 MM월 dd일')}"></span>
@@ -76,7 +76,7 @@
                                      th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></div>
                             </div>
                         </div>
-                        <div class="actions" th:if="${comment.createdBy == currentUser.getUsername()}">
+                        <div class="actions" th:if="${currentUser != null and comment.createdBy == currentUser.getUsername()}">
                             <button id="modify-comment-btn" class="btn btn-primary btn-sm">수정</button>
                             <button id="delete-comment-btn" class="btn btn-secondary btn-sm">삭제</button>
                         </div>
@@ -92,8 +92,8 @@
                             <button id="cancel-comment-btn" class="btn btn-outline-secondary" style="display: none">취소</button>
                         </div>
                     </div>
-                                        답글
-                                        <div class="답글"></div>
+<!--                                        답글-->
+<!--                                        <div class="답글"></div>-->
                 </div>
             </comment-list>
         </div>
