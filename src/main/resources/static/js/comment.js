@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 const createCommentButton = document.getElementById('create-comment-btn');
 
 if (createCommentButton) {
