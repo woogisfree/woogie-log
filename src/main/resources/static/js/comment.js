@@ -1,5 +1,3 @@
-import Swal from 'sweetalert2';
-
 const createCommentButton = document.getElementById('create-comment-btn');
 
 if (createCommentButton) {
@@ -7,6 +5,9 @@ if (createCommentButton) {
         event.preventDefault();
 
         try {
+            let articleId = document.getElementById('article-id').value;
+            let content = document.getElementById('comment-content').value;
+
             const response = await fetch(`/api/v1/isLoggedIn`, {
                 method: 'GET',
                 headers: {
@@ -16,9 +17,6 @@ if (createCommentButton) {
 
             const isLoggedIn = await response.json();
             if (isLoggedIn) {
-                let articleId = document.getElementById('article-id').value;
-                let content = document.getElementById('comment-content').value;
-
                 await fetch(`/api/v1/comments/${articleId}`, {
                     method: 'POST',
                     headers: {
@@ -30,7 +28,62 @@ if (createCommentButton) {
                 });
                 await location.replace('/articles/' + articleId);
             } else {
+                await Swal.fire({
+                    title: '로그인이 필요한 서비스입니다.',
+                    html:
+`
+        <input type="text" id="username" class="swal2-input" placeholder="Username">
+        <input type="password" id="password" class="swal2-input" placeholder="Password">
+`,
+                    confirmButtonText: 'Login',
+                    showCancelButton: true,
+                    cancelButtonText: '돌아가기',
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        const username = Swal.getPopup().querySelector('#username').value;
+                        const password = Swal.getPopup().querySelector('#password').value;
+                        if (!username) {
+                            Swal.showValidationMessage(`아이디를 입력해 주세요.`);
+                        } else if (!password) {
+                            Swal.showValidationMessage(`비밀번호를 입력해 주세요.`);
+                        }
+                        return { username: username, password: password };
+                    }
+                }).then(async result => {
+                    if (result.isConfirmed) {
+                        // Handle the login here with result.value.login and result.value.password
+                        const signInResponse = await fetch('/api/v1/sign-in', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: result.value.username,
+                                password: result.value.password
+                            })
+                        });
 
+                        if (signInResponse.status === 200) {
+                            await Swal.fire({
+                                icon: 'success',
+                                title: '로그인 성공',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                            await fetch(`/api/v1/comments/${articleId}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    content: content,
+                                }),
+                            });
+                            location.reload();
+                        }
+                    }
+                });
             }
         } catch (error) {
             console.log('Error: ', error);
