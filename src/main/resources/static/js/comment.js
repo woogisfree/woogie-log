@@ -1,23 +1,39 @@
 const createCommentButton = document.getElementById('create-comment-btn');
 
 if (createCommentButton) {
-    createCommentButton.addEventListener('click', event => {
+    createCommentButton.addEventListener('click', async event => {
         event.preventDefault();
-        let articleId = document.getElementById('article-id').value;
-        let content = document.getElementById('comment-content').value;
 
-        fetch(`/api/v1/comments/${articleId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                content: content,
-            }),
-        }).then(() => {
-            location.replace('/articles/' + articleId);
-        })
-    })
+        try {
+            const response = await fetch(`/api/v1/isLoggedIn`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const isLoggedIn = await response.json();
+            if (isLoggedIn) {
+                let articleId = document.getElementById('article-id').value;
+                let content = document.getElementById('comment-content').value;
+
+                await fetch(`/api/v1/comments/${articleId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                    }),
+                });
+                await location.replace('/articles/' + articleId);
+            } else {
+
+            }
+        } catch (error) {
+            console.log('Error: ', error);
+        }
+    });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -39,7 +55,7 @@ window.addEventListener('DOMContentLoaded', () => {
             cancelButton.style.display = 'block';
 
             textarea.value = content.textContent;
-            textarea.scrollIntoView({ behavior: 'smooth' });
+            textarea.scrollIntoView({behavior: 'smooth'});
         });
     });
 });
