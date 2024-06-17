@@ -10,7 +10,7 @@
 </head>
 <style>
     #sign-in, #sign-out {
-        height: 2rem;
+        height: 2.5rem;
         border-radius: 1rem;
     }
 
@@ -37,18 +37,15 @@
 <body>
 <header class="p-5 mb-5 text-center bg-light" style="display: flex; justify-content: space-between; align-items: center; margin: 0 auto">
     <h1 class="mb-3 oswald-header" >woogielog</h1>
-    <a id="sign-in" th:if="${currentUser == null}" href="/sign-in" class="btn btn-secondary btn-sm">Sign In</a>
-    <form th:if="${currentUser != null}" th:action="@{/sign-out}" method="post">
-        <button id="sign-out" class="btn btn-secondary btn-sm">Sign Out</button>
-    </form>
+    <div style="display: flex; justify-content: center; align-items: center">
+        <a id="sign-in" th:if="${currentUser == null}" href="/sign-in" class="btn btn-secondary btn-sm">Sign In</a>
+        <a href="/new-article" th:if="${currentUser != null}" class="btn btn-outline-info" style="border-radius: 1rem; width: 6rem; margin-right: 15px; height: 2.5rem">글 등록하기</a>
+        <form th:if="${currentUser != null}" th:action="@{/sign-out}" method="post">
+            <button id="sign-out" class="btn btn-secondary btn-sm">Sign Out</button>
+        </form>
+    </div>
 </header>
 <div class="container">
-    <div th:if="${currentUser != null}" style="text-align: right">
-        <button type="button" id="create-btn"
-                th:onclick="|location.href='@{/new-article}'|"
-                class="btn btn-secondary btn-sm mb-3">글 등록
-        </button>
-    </div>
     <div class="row">
         <div class="container2"  style="text-align: center">
             <a class="card" th:each="item : ${articles}" th:href="@{/articles/{id}(id=${item.id})}">
