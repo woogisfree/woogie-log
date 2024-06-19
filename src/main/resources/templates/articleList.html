@@ -9,9 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Oswald:wght@500&display=swap" rel="stylesheet">
 </head>
 <style>
-    #sign-in, #sign-out {
+    #sign-in {
         height: 2.5rem;
         border-radius: 1rem;
+    }
+
+    #create-article-btn {
+        border-radius: 1rem;
+        width: 6rem;
+        margin-right: 15px;
+        height: 2.5rem
     }
 
     .container2 {
@@ -33,21 +40,75 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    .toggle-list {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        z-index: 1;
+    }
+
+    .toggle-list button {
+        display: block;
+        width: 5.5rem;
+        text-align: center;
+        font-family: sans-serif;
+        border: none;
+        background: none;
+        padding: 10px 0;
+        cursor: pointer;
+    }
+
+    .toggle-list button:hover {
+        background-color: #e9ecef;
+    }
+
+    .toggle-list.visible {
+        display: block;
+    }
+
+    .toggle-list.hidden {
+        display: none;
+    }
 </style>
+<script>
+    function openToggle() {
+        const listElement = document.querySelector('#toggle-list');
+        if (listElement.classList.contains('hidden')) {
+            listElement.classList.remove('hidden');
+            listElement.classList.add('visible');
+        } else {
+            listElement.classList.remove('visible');
+            listElement.classList.add('hidden');
+        }
+    }
+</script>
 <body>
-<header class="p-5 mb-5 text-center bg-light" style="display: flex; justify-content: space-between; align-items: center; margin: 0 auto">
-    <h1 class="mb-3 oswald-header" >woogielog</h1>
-    <div style="display: flex; justify-content: center; align-items: center">
-        <a id="sign-in" th:if="${currentUser == null}" href="/sign-in" class="btn btn-secondary btn-sm">Sign In</a>
-        <a href="/new-article" th:if="${currentUser != null}" class="btn btn-outline-info" style="border-radius: 1rem; width: 6rem; margin-right: 15px; height: 2.5rem">글 등록하기</a>
-        <form th:if="${currentUser != null}" th:action="@{/sign-out}" method="post">
-            <button id="sign-out" class="btn btn-secondary btn-sm">Sign Out</button>
-        </form>
+<header class="text-center" style="display: flex; justify-content: center; align-items: center; margin: 0 auto">
+    <div style="display: flex; justify-content: space-between; width: 71rem">
+        <div class="oswald-header" style="font-size: 2.5rem">woogielog</div>
+        <div style="display: flex; justify-content: center; align-items: center; position: relative;">
+            <div th:if="${currentUser == null}">
+                <a id="sign-in" th:if="${currentUser == null}" href="/sign-in" class="btn btn-secondary btn-sm">로그인</a>
+            </div>
+            <form th:if="${currentUser != null}">
+                <a id="create-article-btn" href="/new-article" class="btn btn-outline-info">글 등록하기</a>
+                <img onclick="openToggle()" style="border-radius: 50%; width:2.5rem; height:2.5rem"
+                     src="https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/09/18/1e586277-48ba-4e8a-9b98-d8cdbe075d86.jpg">
+                <div id="toggle-list" class="toggle-list hidden"
+                     style="position:absolute; top: 3.5rem; right: -1rem; width: 7rem; height: 7rem;">
+                    <button>마이페이지</button>
+                    <button>로그아웃</button>
+                </div>
+            </form>
+        </div>
     </div>
 </header>
-<div class="container">
+<div class="container" style="margin-top: 3rem">
     <div class="row">
-        <div class="container2"  style="text-align: center">
+        <div class="container2" style="text-align: center">
             <a class="card" th:each="item : ${articles}" th:href="@{/articles/{id}(id=${item.id})}">
                 <!--TODO id는 hidden 처리-->
                 <div class="card-header" th:text="${item.id}"></div>
