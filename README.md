@@ -10,11 +10,11 @@
 - [x] article - comment Service refactoring
 - [x] HTML, CSS 정리
 - [x] article markdown 적용
-- [ ] Spring Security 적용 위치 변경
-- [ ] article content에 사진 첨부기능 추가
-- [ ] articleList html 정리
-- [ ] 게시글 목록 필터링, 검색 기능 추가
-- [ ] 마이페이지
+- [x] Spring Security 적용 위치 변경
+- [ ] header fragments로 분리
+- [ ] 마이페이지 구현
+- [ ] 카카오 로그인 구현
+- [ ] 게시글 목록 필터링(내 글 모아보기), 검색 기능 추가
 - [ ] 회원 권한 추가, velog 글 크롤링 작업
 - [ ] 웹소켓 적용
 
@@ -30,6 +30,8 @@
 
 ### 문서화
 - [ ] Spring Rest docs + Swagger
+
+---
 
 ## Trouble Shooting - 추후 게시글로 모두 옮길 예정
 - Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생
