@@ -1,5 +1,3 @@
-# Woogie's Toy Project
-
 ## Feature
 ### 기능
 - [x] 로그아웃 구현
