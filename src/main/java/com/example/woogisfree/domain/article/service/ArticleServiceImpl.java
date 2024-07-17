@@ -6,6 +6,7 @@ import com.example.woogisfree.domain.article.exception.ArticleNotFoundException;
 import com.example.woogisfree.domain.article.repository.ArticleRepository;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.service.UserService;
+import com.example.woogisfree.global.common.BaseTimeEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .createdAt(article.getCreatedAt())
                 .createdBy(article.getCreatedBy())
                 .comments(article.getCommentList().stream()
-                        .sorted(Comparator.comparing(comment -> comment.getCreatedAt(), Comparator.nullsLast(Comparator.naturalOrder())))
+                        .sorted(Comparator.comparing(BaseTimeEntity::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())))
                         .collect(Collectors.toList()))
                 .build();
     }
