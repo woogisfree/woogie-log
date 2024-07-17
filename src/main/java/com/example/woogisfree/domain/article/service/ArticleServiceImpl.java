@@ -51,7 +51,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .createdAt(article.getCreatedAt())
                 .createdBy(article.getCreatedBy())
                 .comments(article.getCommentList().stream()
-                        .sorted(Comparator.comparing(comment -> comment.getCreatedAt()))
+                        .sorted(Comparator.comparing(comment -> comment.getCreatedAt(), Comparator.nullsLast(Comparator.naturalOrder())))
                         .collect(Collectors.toList()))
                 .build();
     }
