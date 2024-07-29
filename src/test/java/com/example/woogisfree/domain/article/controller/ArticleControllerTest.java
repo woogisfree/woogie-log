@@ -14,6 +14,7 @@ import com.example.woogisfree.domain.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -55,11 +56,12 @@ class ArticleControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-    @WithMockUser(username = "user", roles = "USER")
-    void addArticle() throws Exception {
-        //given
-        ApplicationUser user = ApplicationUser.builder()
+    private ApplicationUser user;
+    private Article article;
+
+    @BeforeEach
+    void setup() {
+        user = ApplicationUser.builder()
                 .firstName("firstname")
                 .lastName("lastname")
                 .username("username")
@@ -69,13 +71,18 @@ class ArticleControllerTest {
                 .build();
         userRepository.save(user);
 
-        Article article = Article.builder()
+        article = Article.builder()
                 .title("title")
                 .content("content")
                 .user(user)
                 .build();
         articleRepository.save(article);
+    }
 
+    @Test
+    @WithMockUser(username = "user", roles = "USER")
+    void addArticle() throws Exception {
+        //given
         AddArticleRequest request = new AddArticleRequest("title", "content", 1L);
         when(userService.getUserIdFromUserDetails(any())).thenReturn(1L);
         when(articleService.save(any())).thenReturn(new ArticleResponse(article));
@@ -94,23 +101,6 @@ class ArticleControllerTest {
     @WithMockUser(username = "user", roles = "USER")
     void delete_exist_Article() throws Exception {
         //given
-        ApplicationUser user = ApplicationUser.builder()
-                .firstName("firstname")
-                .lastName("lastname")
-                .username("username")
-                .email("email@email")
-                .password("password")
-                .role(UserRole.USER)
-                .build();
-        userRepository.save(user);
-
-        Article article = Article.builder()
-                .title("title")
-                .content("content")
-                .user(user)
-                .build();
-        articleRepository.save(article);
-
         Long findArticleId = article.getId();
 
         //when
@@ -139,23 +129,6 @@ class ArticleControllerTest {
     @WithMockUser(username = "user", roles = "USER")
     void update_Article() throws Exception {
         //given
-        ApplicationUser user = ApplicationUser.builder()
-                .firstName("firstname")
-                .lastName("lastname")
-                .username("username")
-                .email("email@email")
-                .password("password")
-                .role(UserRole.USER)
-                .build();
-        userRepository.save(user);
-
-        Article article = Article.builder()
-                .title("title")
-                .content("content")
-                .user(user)
-                .build();
-        articleRepository.save(article);
-
         UpdateArticleRequest request = new UpdateArticleRequest("updatedTitle", "updatedContent");
         Article updatedArticle = Article.builder()
                 .title("updatedTitle")
