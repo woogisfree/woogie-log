@@ -1,4 +1,4 @@
-package com.example.woogisfree.domain.user.controller;
+package com.example.woogisfree.domain.user.api;
 
 import com.example.woogisfree.domain.user.dto.SignInRequest;
 import com.example.woogisfree.domain.user.dto.SignUpRequest;

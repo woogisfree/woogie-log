@@ -1,7 +1,6 @@
-package com.example.woogisfree.domain.user.controller;
+package com.example.woogisfree.domain.user.web;
 
 import com.example.woogisfree.domain.user.dto.SignUpRequest;
-import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
