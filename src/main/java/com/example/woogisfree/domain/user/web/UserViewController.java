@@ -8,8 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,12 +58,5 @@ public class UserViewController {
             }
         }
         response.sendRedirect("/");
-    }
-
-    @GetMapping("/my-page")
-    public String myPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        Long userId = userService.getUserIdFromUserDetails(userDetails);
-        model.addAttribute("user", userService.findUserById(userId));
-        return "my-page";
     }
 }
