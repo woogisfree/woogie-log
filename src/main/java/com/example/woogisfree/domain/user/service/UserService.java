@@ -19,4 +19,6 @@ public interface UserService {
     Optional<ApplicationUser> findUserByUsername(String username);
 
     Long getUserIdFromUserDetails(UserDetails userDetails);
+
+    ApplicationUser findUserWithProfileImageById(Long id);
 }

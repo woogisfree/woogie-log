@@ -87,4 +87,10 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public ApplicationUser findUserWithProfileImageById(Long id) {
+        return userRepository.findUserWithProfileImageById(id)
+                .orElseThrow(() -> new UserNotFoundException("Cannot Find User. userId : " + id));
+    }
 }
