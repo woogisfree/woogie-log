@@ -8,6 +8,7 @@ import com.example.woogisfree.domain.user.exception.EmailAlreadyExistsException;
 import com.example.woogisfree.domain.user.exception.PasswordMismatchException;
 import com.example.woogisfree.domain.user.exception.UserNotFoundException;
 import com.example.woogisfree.domain.user.repository.UserRepository;
+import com.example.woogisfree.global.config.redis.RedisService;
 import com.example.woogisfree.global.security.JwtToken;
 import com.example.woogisfree.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,9 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final AuthenticationManagerBuilder authenticationManager;
+    private final RedisService redisService;
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -59,12 +63,18 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
         ApplicationUser savedUser = userRepository.save(signUpRequest.toEntity(encodedPassword, UserRole.USER));
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(savedUser.getUsername(), signUpRequest.getPassword());
+        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
+        JwtToken token = tokenProvider.generateToken(authentication);
 
-        return UserResponse.builder()
+        redisService.save(savedUser.getUsername(), token.getRefreshToken());
+
+        UserResponse userInfo = UserResponse.builder()
                 .id(savedUser.getId())
                 .username(savedUser.getUsername())
                 .role(savedUser.getRole())
                 .build();
+        return userInfo;
     }
 
     @Override
