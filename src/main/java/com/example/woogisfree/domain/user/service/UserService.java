@@ -21,4 +21,6 @@ public interface UserService {
     Long getUserIdFromUserDetails(UserDetails userDetails);
 
     ApplicationUser findUserWithProfileImageById(Long id);
+
+    ApplicationUser getCurrentUser();
 }

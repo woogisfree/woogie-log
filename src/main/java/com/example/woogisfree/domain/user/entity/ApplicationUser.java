@@ -1,6 +1,5 @@
 package com.example.woogisfree.domain.user.entity;
 
-import com.example.woogisfree.domain.mypage.entity.ProfileImage;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;
@@ -45,19 +44,14 @@ public class ApplicationUser implements UserDetails {
     @Column(nullable = false)
     private UserRole role;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_image_id")
-    private ProfileImage profileImage;
-
     @Builder
-    public ApplicationUser(String firstName, String lastName, String username, String email, String password, UserRole role, ProfileImage profileImage) {
+    public ApplicationUser(String firstName, String lastName, String username, String email, String password, UserRole role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.profileImage = profileImage;
     }
 
     @Override

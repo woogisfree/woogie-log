@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -13,9 +13,8 @@ public class RedisServiceImpl implements RedisService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public void save(String username, String refreshToken) {
-        redisTemplate.opsForValue().set(username, refreshToken);
-        redisTemplate.expire(username, Duration.ofDays(30));
+    public void save(String username, String refreshToken, long expirationTimeInMilliseconds) {
+        redisTemplate.opsForValue().set(username, refreshToken, expirationTimeInMilliseconds, TimeUnit.MILLISECONDS);
     }
 
     @Override

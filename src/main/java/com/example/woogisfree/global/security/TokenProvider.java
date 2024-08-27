@@ -35,7 +35,6 @@ public class TokenProvider implements InitializingBean {
     private long refreshTokenValidityInMilliseconds;
     private Key key;
 
-
     @Override
     public void afterPropertiesSet() throws Exception {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
@@ -51,10 +50,12 @@ public class TokenProvider implements InitializingBean {
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
+                .setIssuedAt(new Date(now))
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
+        // 밀리초 단위
         Date refreshTokenExpiresIn = new Date(now + refreshTokenValidityInMilliseconds);
         String refreshToken = Jwts.builder()
                 .setExpiration(refreshTokenExpiresIn)
@@ -65,6 +66,7 @@ public class TokenProvider implements InitializingBean {
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .accessTokenExpiresAt(accessTokenExpiresIn)
                 .build();
     }
 
