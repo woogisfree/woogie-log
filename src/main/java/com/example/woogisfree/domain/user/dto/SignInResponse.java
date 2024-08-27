@@ -1,6 +1,7 @@
 package com.example.woogisfree.domain.user.dto;
 
 import com.example.woogisfree.domain.user.entity.UserRole;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SignInResponse {
     private String accessToken;
     private String username;
