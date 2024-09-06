@@ -11,7 +11,6 @@ import lombok.Setter;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SignInResponse {
-    private String accessToken;
     private String username;
     private UserRole role;
     private long expiresIn;
