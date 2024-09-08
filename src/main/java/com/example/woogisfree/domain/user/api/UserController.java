@@ -4,6 +4,7 @@ import com.example.woogisfree.domain.user.dto.SignInRequest;
 import com.example.woogisfree.domain.user.dto.SignInResponse;
 import com.example.woogisfree.domain.user.dto.SignUpRequest;
 import com.example.woogisfree.domain.user.dto.UserResponse;
+import com.example.woogisfree.domain.user.entity.UserRole;
 import com.example.woogisfree.domain.user.service.UserService;
 import com.example.woogisfree.global.config.redis.RedisService;
 import com.example.woogisfree.global.security.JwtToken;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -32,8 +34,6 @@ public class UserController {
     private final UserService userService;
     private final RedisService redisService;
 
-    @Value("${jwt.access-token-validity-in-milliseconds}")
-    private long accessTokenValidityInMilliseconds;
     @Value("${jwt.refresh-token-validity-in-milliseconds}")
     private long refreshTokenValidityInMilliseconds;
 
@@ -43,11 +43,13 @@ public class UserController {
             String username = signInRequest.getUsername();
             String password = signInRequest.getPassword();
             JwtToken jwtToken = userService.signIn(username, password);
+            String accessToken = jwtToken.getAccessToken();
+            String refreshToken = jwtToken.getRefreshToken();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + jwtToken.getAccessToken());
+            headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
 
-            Cookie refreshTokenCookie = new Cookie("refreshToken", jwtToken.getRefreshToken());
+            Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
             refreshTokenCookie.setHttpOnly(true);
             refreshTokenCookie.setSecure(true);
             refreshTokenCookie.setPath("/");
@@ -55,13 +57,16 @@ public class UserController {
             refreshTokenCookie.setMaxAge((int) (refreshTokenValidityInMilliseconds / 1000));
             response.addCookie(refreshTokenCookie);
 
-            redisService.save(username, jwtToken.getRefreshToken(), refreshTokenValidityInMilliseconds);
+            redisService.save(username, refreshToken, refreshTokenValidityInMilliseconds);
+
+            UserRole role = userService.findUserByUsername(username)
+                    .map(user -> user.getRole())
+                    .orElseThrow(() -> new UsernameNotFoundException("username not found"));
 
             long expiresIn = (jwtToken.getAccessTokenExpiresAt().getTime() - System.currentTimeMillis()) / 1000;
             SignInResponse signInResponse = SignInResponse.builder()
-                    .accessToken(jwtToken.getAccessToken())
                     .username(username)
-                    .role(userService.findUserByUsername(username).get().getRole())
+                    .role(role)
                     .expiresIn(expiresIn)
                     .build();
             return ResponseEntity.ok().headers(headers).body(signInResponse);

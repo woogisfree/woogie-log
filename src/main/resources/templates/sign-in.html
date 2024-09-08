@@ -39,10 +39,8 @@
 <script>
     document.getElementById('loginForm').addEventListener('submit', async function (event) {
         event.preventDefault();
-
         const username = document.querySelector('input[name="username"]').value;
         const password = document.querySelector('input[name="password"]').value;
-        let loginSuccessful = false;
 
         await fetch('/api/v1/sign-in', {
             method: 'POST',
@@ -53,10 +51,17 @@
                 username: username,
                 password: password
             })
-        }).then(response => {
+        }).then(async response => {
             if (response.ok) {
-                loginSuccessful = true;
-                return response.json();
+                let accessToken = response.headers.get('Authorization');
+                let data = await response.json();
+                let expiresIn = data.expiresIn;
+                if (accessToken) {
+                    document.cookie = `accessToken=${accessToken.replace('Bearer ', '')}; path=/; max-age=${expiresIn}`;
+                    window.location.href = "/articles";
+                } else {
+                    console.error('Access token not found in response headers');
+                }
             } else if (response.status === 401) {
                 return response.text().then(message => {
                     document.querySelector('.alert-danger').textContent = message;
@@ -64,18 +69,8 @@
                 });
             }
         }).catch(error => {
-            console.error('Error:', error);
+            console.error('Error during login:', error);
         });
-
-        if (loginSuccessful) {
-            await fetch('/articles', {
-                method: 'GET',
-            }).then(response => {
-                if (response.ok) {
-                    window.location.href = "/articles";
-                }
-            });
-        }
     });
 </script>
 </html>

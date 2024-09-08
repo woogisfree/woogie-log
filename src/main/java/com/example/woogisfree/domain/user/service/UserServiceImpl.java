@@ -33,7 +33,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final AuthenticationManagerBuilder authenticationManager;
-    private final RedisService redisService;
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -61,20 +60,15 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistsException("Email already exists.");
         }
 
+        // 비밀번호 인코딩 및 사용자 저장
         String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
         ApplicationUser savedUser = userRepository.save(signUpRequest.toEntity(encodedPassword, UserRole.USER));
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(savedUser.getUsername(), signUpRequest.getPassword());
-        Authentication authentication = authenticationManager.getObject().authenticate(authenticationToken);
-        JwtToken token = tokenProvider.generateToken(authentication);
 
-        redisService.save(savedUser.getUsername(), token.getRefreshToken());
-
-        UserResponse userInfo = UserResponse.builder()
+        return UserResponse.builder()
                 .id(savedUser.getId())
                 .username(savedUser.getUsername())
                 .role(savedUser.getRole())
                 .build();
-        return userInfo;
     }
 
     @Override
