@@ -1,11 +1,10 @@
-package com.example.woogisfree.domain.article.controller;
+package com.example.woogisfree.domain.article.web;
 
 import com.example.woogisfree.domain.article.dto.ArticleSummaryResponse;
 import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import com.example.woogisfree.domain.article.dto.ArticleWithCommentResponse;
 import com.example.woogisfree.domain.article.service.ArticleService;
 import com.example.woogisfree.domain.user.entity.ApplicationUser;
-import com.example.woogisfree.domain.user.exception.UserNotFoundException;
 import com.example.woogisfree.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,3 +64,6 @@ public class ArticleViewController {
         return "newArticle";
     }
 }
+
+//infinite scroll
+//https://webdesign.tutsplus.com/how-to-implement-infinite-scrolling-with-javascript--cms-37055t

@@ -1,4 +1,4 @@
-package com.example.woogisfree.domain.article.controller;
+package com.example.woogisfree.domain.article.api;
 
 import com.example.woogisfree.domain.article.dto.AddArticleRequest;
 import com.example.woogisfree.domain.article.dto.ArticleResponse;

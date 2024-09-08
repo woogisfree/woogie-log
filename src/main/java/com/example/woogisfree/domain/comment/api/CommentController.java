@@ -1,4 +1,4 @@
-package com.example.woogisfree.domain.comment.controller;
+package com.example.woogisfree.domain.comment.api;
 
 import com.example.woogisfree.domain.comment.dto.AddCommentRequest;
 import com.example.woogisfree.domain.comment.dto.AddCommentResponse;
