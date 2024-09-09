@@ -8,7 +8,6 @@ import com.example.woogisfree.domain.user.exception.EmailAlreadyExistsException;
 import com.example.woogisfree.domain.user.exception.PasswordMismatchException;
 import com.example.woogisfree.domain.user.exception.UserNotFoundException;
 import com.example.woogisfree.domain.user.repository.UserRepository;
-import com.example.woogisfree.global.config.redis.RedisService;
 import com.example.woogisfree.global.security.JwtToken;
 import com.example.woogisfree.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -90,11 +88,5 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow(() -> new IllegalArgumentException("user not found")).getId();
         }
         return null;
-    }
-
-    @Override
-    public ApplicationUser findUserWithProfileImageById(Long id) {
-        return userRepository.findUserWithProfileImageById(id)
-                .orElseThrow(() -> new UserNotFoundException("Cannot Find User. userId : " + id));
     }
 }
