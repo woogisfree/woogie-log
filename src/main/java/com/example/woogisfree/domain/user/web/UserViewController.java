@@ -5,7 +5,6 @@ import com.example.woogisfree.domain.user.service.UserService;
 import com.example.woogisfree.global.config.redis.RedisService;
 import com.example.woogisfree.global.security.TokenProvider;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 @Slf4j
 @Controller
@@ -52,14 +50,8 @@ public class UserViewController {
     }
 
     @PostMapping("/sign-out")
-    public ResponseEntity<String> signOut(HttpServletRequest request, HttpServletResponse response,
-                                          @RequestHeader("Authorization") String accessToken
-    ) {
+    public ResponseEntity<String> signOut(HttpServletResponse response) {
         try {
-            String parsedAccessToken = accessToken.replace("Bearer ", "");
-            String username = tokenProvider.extractUsername(parsedAccessToken);
-            redisService.delete(username);
-
             Cookie cookie = new Cookie("refreshToken", null);
             cookie.setPath("/");
             cookie.setMaxAge(0);
