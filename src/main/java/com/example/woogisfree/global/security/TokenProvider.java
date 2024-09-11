@@ -109,4 +109,11 @@ public class TokenProvider implements InitializingBean {
             return e.getClaims();
         }
     }
+
+    public String extractUsername(String accessToken) {
+        return Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(accessToken)
+                .getBody().getSubject();
+    }
 }

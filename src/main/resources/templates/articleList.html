@@ -86,21 +86,6 @@
             listElement.classList.add('hidden');
         }
     }
-
-    function logout() {
-        fetch('/sign-out', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                alert('로그아웃에 실패했습니다.');
-            }
-        });
-    }
 </script>
 <body>
 <header class="text-center" style="display: flex; justify-content: center; align-items: center; margin: 0 auto">
@@ -139,5 +124,6 @@
     </div>
 </div>
 <script src="/js/article.js" type="module"></script>
+<script src="/js/logout.js" type="module"></script>
 </body>
 </html>

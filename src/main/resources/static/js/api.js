@@ -1,4 +1,5 @@
 const api = axios.create({
+    //TODO baseURL 나중에 배포했을 때 환경변수 설정 해줘야함
     baseURL: 'http://localhost:8080',
     timeout: 1000,
     withCredentials: true,
