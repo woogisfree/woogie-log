@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Slf4j
 @Controller
@@ -50,8 +51,13 @@ public class UserViewController {
     }
 
     @PostMapping("/sign-out")
-    public ResponseEntity<String> signOut(HttpServletResponse response) {
+    public ResponseEntity<String> signOut(HttpServletResponse response,
+                                          @RequestHeader("Authorization") String accessToken) {
         try {
+            String parsedAccessToken = accessToken.replace("Bearer ", "");
+            String username = tokenProvider.extractUsername(parsedAccessToken);
+            redisService.delete(username);
+
             Cookie cookie = new Cookie("refreshToken", null);
             cookie.setPath("/");
             cookie.setMaxAge(0);
