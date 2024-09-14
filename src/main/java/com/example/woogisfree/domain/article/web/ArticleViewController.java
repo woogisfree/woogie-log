@@ -8,14 +8,13 @@ import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -26,26 +25,34 @@ public class ArticleViewController {
     private final ArticleService articleService;
     private final UserService userService;
 
+    /**
+     * TODO 게시글의 수가 많아지는 경우 처리
+     * 1. 페이징 처리
+     * 2. 쿼리 최적화
+     * 3. 캐싱
+     * 4. DB 인덱싱
+     * 5. 무한스크롤 적용
+     */
     @GetMapping("/articles")
-    public String getArticles(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String getArticles(Model model, Principal principal) {
         List<ArticleSummaryResponse> articles = articleService.findAllByOrderByIdDesc();
         model.addAttribute("articles", articles);
 
-        if (userDetails != null) {
-            ApplicationUser currentUser = userService.findUserById(userService.getUserIdFromUserDetails(userDetails));
+        if (principal != null) {
+            ApplicationUser currentUser = userService.findUserByUsername(principal.getName()).get();
             model.addAttribute("currentUser", currentUser);
         }
         return "articleList";
     }
 
     @GetMapping("/articles/{id}")
-    public String getArticle(@PathVariable long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String getArticle(@PathVariable long id, Model model, Principal principal) {
         ArticleWithCommentResponse article = articleService.findById(id);
         model.addAttribute("article", article);
 
-        if (userDetails != null) {
-            ApplicationUser currentUser = userService.findUserById(userService.getUserIdFromUserDetails(userDetails));
-            model.addAttribute("currentUser", currentUser.getUsername());
+        if (principal != null) {
+            ApplicationUser currentUser = userService.findUserByUsername(principal.getName()).get();
+            model.addAttribute("currentUser", currentUser);
         }
         return "article";
     }
