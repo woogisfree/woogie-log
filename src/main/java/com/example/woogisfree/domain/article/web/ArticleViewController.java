@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,10 +28,7 @@ public class ArticleViewController {
 
     @GetMapping("/articles")
     public String getArticles(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        List<ArticleSummaryResponse> articles = articleService.findAll()
-                .stream()
-                .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
-                .collect(Collectors.toList());
+        List<ArticleSummaryResponse> articles = articleService.findAllByOrderByIdDesc();
         model.addAttribute("articles", articles);
 
         if (userDetails != null) {

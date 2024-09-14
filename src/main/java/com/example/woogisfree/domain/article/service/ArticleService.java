@@ -10,6 +10,8 @@ public interface ArticleService {
 
     List<ArticleSummaryResponse> findAll();
 
+    List<ArticleSummaryResponse> findAllByOrderByIdDesc();
+
     ArticleWithCommentResponse findById(long id);
 
     void delete(long articleId);

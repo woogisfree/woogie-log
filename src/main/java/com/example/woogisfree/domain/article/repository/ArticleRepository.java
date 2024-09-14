@@ -16,4 +16,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @EntityGraph(attributePaths = {"commentList"})
     Optional<Article> findAllById(Long id);
+
+    @EntityGraph(attributePaths = {"commentList"})
+    List<Article> findAllByOrderByIdDesc();
 }

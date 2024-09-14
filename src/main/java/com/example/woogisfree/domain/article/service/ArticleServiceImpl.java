@@ -41,6 +41,18 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public List<ArticleSummaryResponse> findAllByOrderByIdDesc() {
+        List<Article> articles = articleRepository.findAllByOrderByIdDesc();
+        return articles.stream()
+                .map(article -> new ArticleSummaryResponse(
+                        article.getId(),
+                        article.getTitle(),
+                        article.getContent(),
+                        article.getCommentList().size()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ArticleWithCommentResponse findById(long id) {
         Article article = articleRepository.findAllById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("not found : " + id));
