@@ -1,195 +1,125 @@
-## Feature
-### 기능
-- [x] 로그아웃 구현
-- [x] articles CRUD 리팩토링
-  - [x] 게시글 생성 버그 해결 (415 Unsupported Media Type)
-  - [x] api 단 코드 수정 (Response에 Entity를 직접 반환하는 대신 DTO로 변환하여 반환)
-- [x] Article Entity에 createdBy, updatedBy 적용
-- [x] article - comment Service refactoring
-- [x] HTML, CSS 정리
-- [x] article markdown 적용
-- [x] Spring Security 적용 위치 변경
-- [ ] header fragments로 분리
-- [ ] 마이페이지 구현
-- [ ] 카카오 로그인 구현
+# 목차
+
+- [개요](#개요)
+- [기능 상세](#기능-상세)
+- [테스트](#테스트)
+  - [단위 테스트](#단위-테스트)
+  - [통합 테스트](#통합-테스트)
+- [문서화](#문서화)
+  - [API 문서화](#api-문서화)
+  - [사용자 가이드](#사용자-가이드)
+
+## 개요
+
+- 프로젝트 이름: woogie-log
+- 기술 스택
+  - 백엔드: Spring Boot, Spring Security + JWT
+  - 데이터베이스: Spring Data JPA, Querydsl + PostgreSQL
+  - 뷰 템플릿: Thymeleaf
+  - 테스트 및 문서화: Junit5, Swagger
+  - 배포 및 CI/CD: AWS, Github Actions (예정)
+
+## 기능 상세
+
+### 사용자 인증 및 권한 (OAuth2 추가 예정)
+
+- **회원가입 절차**
+
+  1. **비밀번호 일치 여부 확인**: 비밀번호(`password`)와 확인 비밀번호(`confirmPassword`)가 동일한지 확인합니다.
+  2. **이메일 중복 확인**: 사용자가 입력한 이메일이 이미 데이터베이스에 존재하는지 확인합니다.
+  3. **비밀번호 인코딩**: 비밀번호를 그대로 저장하지 않고, `passwordEncoder`를 이용해 비밀번호를 암호화한 후 저장합니다. 이는 보안 강화를 위한 조치입니다.
+
+- **로그인 절차**
+
+    1. **인증 처리**: 서버는 `username`과 `password`를 사용해 인증을 시도합니다. 이를 위해 `UsernamePasswordAuthenticationToken`을 생성하고, `AuthenticationManager`를 통해
+       인증을 수행합니다. 인증이 성공하면, JWT 토큰이 발급됩니다.
+
+  2. **JWT 토큰 발급**: 인증에 성공한 후, 서버는 다음과 같은 두 가지 JWT 토큰을 생성합니다.
+
+      - **Access Token**: 리소스에 접근할 때 사용하는 짧은 유효기간을 가진 토큰.
+      - **Refresh Token**: 액세스 토큰이 만료되었을 때 새로운 액세스 토큰을 발급받기 위한 토큰.
+
+  3. **토큰 전송**
+
+      - **Access Token**: HTTP 응답의 `Authorization` 헤더에 `Bearer` 형식으로 포함됩니다.
+      - **Refresh Token**: HTTP 쿠키에 `HttpOnly` 속성을 설정하여 전송됩니다. 이 쿠키는 브라우저에서 접근할 수 없으며, 서버에서만 사용할 수 있습니다.
+
+  ```http
+  HTTP/1.1 200 OK
+  Authorization: Bearer <Access Token>
+  Set-Cookie: refreshToken=<Refresh Token>; HttpOnly; Secure; Max-Age=<유효기간>
+  ```
+
+  4. **`Redis`에 Refresh Token 저장**: `Refresh Token`은 `Redis`에 `username`을 키로 하여 저장됩니다. 이 토큰은 설정된 유효기간 동안 `Redis`에 저장되어 관리됩니다. 이를 통해 로그아웃 시
+     토큰을 무효화하거나 만료된 토큰을 관리할 수 있습니다.
+
+  5. **응답 데이터**: 서버는 로그인 요청에 성공하면 다음과 같은 사용자 정보를 응답으로 반환합니다:
+
+      - `username`: 로그인한 사용자 이름
+      - `role`: 사용자의 권한(Role)
+      - `expiresIn`: `Access Token`의 남은 유효시간(초 단위), 클라이언트는 이 값을 이용하여 `Access Token`을 자동 갱신할 수 있습니다.
+
+  ```
+  {
+    "username": "사용자 이름",
+    "role": "ROLE_USER",
+    "expiresIn": ${jwt.access-token-validity-in-milliseconds}
+  }
+  ```
+
+    6. 클라이언트에서 `Access Token` 사용: 클라이언트는 받은 Access Token을 HTTP 요청의 Authorization 헤더에 담기 위해 axios 인스턴스를 사용합니다. `axios instance`에
+       Authorization
+     헤더를 설정하여 API 요청을 보낼 수 있습니다.
+
+- **로그아웃 절차**
+
+    1. **토큰 파싱 및 사용자 정보 추출**: 서버는 `Authorization` 헤더에서 `Access Token`을 추출한 후, “Bearer “ 접두어를 제거하여 실제 JWT 토큰을 파싱합니다. 이후 tokenProvider를 사용하여
+       JWT
+     토큰에서 사용자 이름(username)을 추출합니다.
+    2. **Redis에서 Refresh Token 삭제**: 추출한 username을 키로 하여 Redis에 저장된 해당 사용자의 리프레시 토큰을 삭제합니다. 이를 통해 서버는 로그아웃한 사용자가 리프레시 토큰을 사용해 새로운 액세스 토큰을
+       발급받지 못하도록 합니다.
+    3. **쿠키에서 Refresh Token 삭제**: 클라이언트 측에서 사용 중인 Refresh Token을 제거하기 위해, 서버는 HttpOnly로 설정된 refreshToken 쿠키를 만료시킵니다. 이를 위해 Max-Age를 0으로
+       설정하고,쿠키를 클라이언트로 전달합니다. 이렇게 하면 클라이언트 브라우저에 있는 refreshToken이 삭제됩니다.
+
+  <!--
+
+### 게시글 관리
+
+- 게시글 등록
+
+  - 비동기 처리
+
+    - 이미지나 동영상 업로드 후 썸네일을 생성하거나 외부 API 호출이 필요한 작업을 Kafka를 통해 비동기적으로 처리할 수 있습니다.
+
+    - 사용 예시:  
+      사용자가 블로그에 이미지를 업로드하면, 이를 Kafka로 전송하고 백그라운드에서 썸네일을 생성하는 작업을 처리합니다.
+      Kafka에 저장된 메시지를 처리하는 소비자는 작업이 완료되면 결과를 데이터베이스에 저장하거나 사용자에게 알림을 보낼 수 있습니다.
+
+- 게시글 조회
+  - 게시글의 수가 많아지는 경우 처리
+  - 필터링
+  - 검색 기능
+  - markdown 에디터를 이용해서 markdown preview 제공
+- 게시글 수정
+- 게시글 삭제
+
+### 마이페이지
+
+- 프로필 이미지 추가
+- 댓글 알림 설정
+- 회원 탈퇴
+
 - [ ] 게시글 목록 필터링(내 글 모아보기), 검색 기능 추가
 - [ ] 회원 권한 추가, velog 글 크롤링 작업
 - [ ] 웹소켓 적용
 
-### 테스트
-- [ ] Article - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
-- [x] Test Code 의 실행 순서에 따라 테스트가 실패함 (순서에 의존하지 않도록 수정)
-- [ ] Jacoco 적용
-- [ ] Comment - Test Code 작성 (Repository -> Service -> Controller -> Integration Test)
+## 테스트
 
-### 아키텍처 및 배포
-- [ ] AWS 배포
-- [ ] CI/CD (Jenkins / Github Actions / Travis CI 중 택 1)
+- Repository -> Service -> Controller -> Integration Test
+- Jacoco 적용
 
-### 문서화
-- [ ] Spring Rest docs + Swagger
+## 문서화
 
----
+- Spring Rest docs + Swagger
 
-## Trouble Shooting - 추후 게시글로 모두 옮길 예정
-- Test Code를 작성할 때 main DB에 영향을 미쳐 의도하지 않은 상황 발생
-  - application.yml를 수정하여 test DB를 따로 생성하여 해결
-  - Test Class에는 `@ActiveProfiles("test")` 어노테이션을 추가하여 해결
-
-```yaml
-spring:
-  config:
-    activate:
-      on-profile: test
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-```
-
-- 로그인할 때 아이디 또는 비밀번호 불일치시 에러메시지 뜨지 않음
-  - Client - Server 간 통신을 한번 더 해서 BindingResult 를 이용하려다가, 네트워크를 한번 더 타는 것 보다는 Client 단에서 해결하는게 나을 것 같다는 판단
-  - 처음에는 `display: none` 인 상태로 두고, 서버에서 에러메세지가 오면 `display: block`으로 변경하는 방식으로 구현
-```html
-<div class="alert alert-danger" style="display: none"></div>
-```
-```javascript
-if (response.status === 401) {
-  return response.text().then(message => {
-    document.querySelector('.alert-danger').textContent = message;
-    document.querySelector('.alert-danger').style.display = 'block';  
-})};
-```
-
-- 회원가입시 비밀번호와 비밀번호 확인이 불일치하거나, 이메일이 중복일때 RuntimeException 이 터지면서 whitelabel Error Page 표출
-  - 이를 해결하기 위해 `GlobalExceptionHandler` 를 만들어 예외처리를 해주었음
-  - `org.springframework.web.ErrorResponse` interface 를 사용해보았더니 에러 메시지가 가독성이 너무 떨어져서 ErrorResponse DTO 를 새로 만듬
-```java
-@Slf4j
-@ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-
-    @ExceptionHandler(PasswordMismatchException.class)
-    public ResponseEntity<ErrorResponse> handlePasswordMismatchException(PasswordMismatchException e) {
-        return ResponseEntity.badRequest().body(
-                ErrorResponse.builder()
-                        .status(HttpStatus.BAD_REQUEST.value()).message(e.getMessage())
-                        .build());
-    }
-
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
-        return ResponseEntity.badRequest().body(
-                ErrorResponse.builder()
-                        .status(HttpStatus.BAD_REQUEST.value()).message(e.getMessage())
-                        .build());
-    }
-}
-```
-아래는 `org.springframework.web.ErrorResponse` 를 사용했을 때의 Response
-```json
-{
-    "statusCode": "BAD_REQUEST",
-    "headers": {},
-    "detailMessageCode": "problemDetail.com.example.woogisfree.domain.user.exception.PasswordMismatchException",
-    "detailMessageArguments": null,
-    "titleMessageCode": "problemDetail.title.com.example.woogisfree.domain.user.exception.PasswordMismatchException",
-    "body": {
-        "type": "about:blank",
-        "title": "Bad Request",
-        "status": 400,
-        "detail": "Password and confirmation password do not match."
-    }
-}
-```
-
-- 게시글 생성시 createdBy, updatedBy를 적용하려고 하였으나, `org.springframework.data.domain.AuditorAware` 를 구현하지 않아서 에러가 발생
-  - `org.springframework.data.domain.AuditorAware` 를 구현하여 `org.springframework.data.annotation.CreatedBy` 와 `org.springframework.data.annotation.LastModifiedBy` 를 사용할 수 있도록 함
-  - 참고 - https://docs.spring.io/spring-data/jpa/docs/1.7.0.DATAJPA-580-SNAPSHOT/reference/html/auditing.html
-```java
-@Configuration
-@EnableJpaAuditing
-public class JpaConfig {
-
-    @Bean
-    public AuditorAware<String> auditorAware() {
-        return new AuditorAwareImpl();
-    }
-}
-
-public class AuditorAwareImpl implements AuditorAware<String> {
-
-  @Override
-  public Optional<String> getCurrentAuditor() {
-    return Optional.ofNullable(
-            ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                    .getUsername());
-  }
-}
-```
-
-- 실수로 다른 브랜치에서 작업한 걸 커밋만 하고 푸시를 안한 상태에서 병합하고 브랜치를 지움;;
-```shell
-git reflog 명령어를 사용하여 최근 모든 git 작업 나열
-
-d272f5e (HEAD -> main, origin/main, origin/HEAD) HEAD@{0}: pull: Fast-forward
-509a32f HEAD@{1}: checkout: moving from restore-css-branch to main
-197d963 (origin/restore-css-branch, restore-css-branch) HEAD@{2}: checkout: moving from main to restore-css-branch
-fe8dc91 HEAD@{3}: checkout: moving from articleList-css to main
-197d963 (origin/restore-css-branch, restore-css-branch) HEAD@{4}: commit: feat: update 관련 js 수정
-7d88eb3 HEAD@{5}: commit: feat: articleList grid 적용
-63d09cd HEAD@{6}: checkout: moving from main to articleList-css
-fe8dc91 HEAD@{7}: checkout: moving from main to main
-fe8dc91 HEAD@{8}: checkout: moving from articleList-css to main
-
-git branch <branch-name> <commit-ID> 명령을 사용하여 새 브랜치를 생성
-이때 commit-ID는 삭제된 브랜치에서 마지막으로 작업한 커밋 ID
-
-잘 복구되었는지 확인 후 재병합
-```
-
-- repository에서는 dto를 반환하는 것보다 순수한 entity 자체를 반환하는 것이 좋다
-  - repository에서 entity를 반환하고, service에서 dto로 변환하여 반환하는 방식으로 변경
-
-- @DataJpaTest 는 기본적으로 트랜잭션 안에서 실행된다. 즉, 테스트 후 DB에 생긴 모든 변화들이 롤백된다.
-  - 하지만 트랜잭션을 사용하지 않는 테스트를 작성할 때는 `@Transactional(propagation = Propagation.NOT_SUPPORTED)` 를 사용한다.
-```java
-@DataJpaTest
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
-public class ArticleRepositoryTest {
-  // ... 
-}
-
-@Test
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
-public void testMethodWithoutTransactions() {
-  // ... 
-}
-```
-
-- Controller의 Test Code를 작성할 때, 권한이 필요한 경우 `@WithMockUser` 어노테이션을 사용하여 권한을 부여할 수 있다.
-- `@WithMockUser`을 사용하여 username, roles 등을 설정할 수 있다. 즉, 가짜 사용자를 만드는 것이다.
-- 시행착오 : @WithMockUser 어노테이션을 사용하지 않고, SecurityContextHolder를 사용하여 Principal을 직접 설정하려고 했으나 실패함
-```java 
-@Test
-@WithMockUser(username = "user", roles = "USER")
-void addArticle() throws Exception {
-    //given
-    AddArticleRequest request = new AddArticleRequest("title", "content", 1L);
-    ApplicationUser user = new ApplicationUser("firstname", "lastname", "username", "email", "password", UserRole.USER);
-    Article article = new Article("title", "content", user);
-
-    when(userService.getUserIdFromUserDetails(any())).thenReturn(1L);
-    when(articleService.save(any())).thenReturn(new ArticleResponse(article));
-
-    //then
-    mockMvc.perform(post("/api/v1/articles")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isCreated());
-}
-```
+-->
