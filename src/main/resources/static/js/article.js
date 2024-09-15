@@ -1,44 +1,43 @@
+import api from "./api.js";
+
 const deleteButton = document.getElementById('delete-btn');
 
 if (deleteButton) {
     deleteButton.addEventListener('click', event => {
         let id = document.getElementById('article-id').value;
-        fetch(`/api/v1/articles/${id}`, {
-            method: 'DELETE'
-        })
+        api.delete(`/api/v1/articles/${id}`)
             .then(() => {
                 alert('삭제가 완료되었습니다.');
                 location.replace('/articles')
-            })
+            });
     })
 }
 
-const modifyButton = document.getElementById('modify-btn')
+document.addEventListener('DOMContentLoaded', () => {
+    const modifyButton = document.getElementById('modify-btn');
 
-if (modifyButton) {
-    modifyButton.addEventListener('click', event => {
+    if (modifyButton) {
+        modifyButton.addEventListener('click', event => {
             event.preventDefault();
             let params = new URLSearchParams(location.search);
             let id = params.get('id');
             let title = document.getElementById('title').value;
             let content = document.getElementById('content').value;
 
-            fetch(`/api/v1/articles/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: title,
-                    content: content,
-                })
-            }).then(() => {
-                alert('수정이 완료되었습니다.')
-                location.replace(`/articles/${id}`)
+            api.patch(`/api/v1/articles/${id}`, {
+                title: title, content: content,
             })
-        }
-    )
-}
+                .then(() => {
+                    alert('수정이 완료되었습니다.');
+                    location.replace(`/articles/${id}`);
+                })
+                .catch(error => {
+                    console.error('게시글 수정 중 오류 발생:', error);
+                    alert('게시글 수정 중 오류가 발생했습니다.');
+                });
+        });
+    }
+});
 
 const createButton = document.getElementById('create-btn')
 
@@ -48,20 +47,18 @@ if (createButton) {
         let title = document.getElementById('title').value;
         let content = document.getElementById('content').value;
 
-        fetch('/api/v1/articles', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                title: title,
-                content: content,
-            }),
-        }).then(() => {
-            alert('게시글이 생성되었습니다.');
-            location.replace('/articles');
+        api.post('/api/v1/articles', {
+            title: title, content: content,
         })
-    })
+            .then(() => {
+                alert('게시글이 생성되었습니다.');
+                location.replace('/articles');
+            })
+            .catch(error => {
+                console.error('게시글 생성 중 오류 발생:', error);
+                alert('게시글 생성 중 오류가 발생했습니다.');
+            });
+    });
 }
 
 function timeAgo(dateString) {

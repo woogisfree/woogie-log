@@ -37,10 +37,12 @@
                     <p id="content" th:text="${article.content}"></p>
                 </section>
                 <button type="button"
+                        th:if="${article.createdBy == currentUser}"
                         th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.articleId})}'|"
                         class="btn btn-primary btn-sm">수정
                 </button>
                 <button type="button" id="delete-btn"
+                        th:if="${article.createdBy == currentUser}"
                         class="btn btn-secondary btn-sm">삭제
                 </button>
                 <button type="button" class="btn btn-success btn-sm"
