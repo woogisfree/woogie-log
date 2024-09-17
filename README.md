@@ -68,14 +68,12 @@
   ```
 
     6. 클라이언트에서 `Access Token` 사용: 클라이언트는 받은 Access Token을 HTTP 요청의 Authorization 헤더에 담기 위해 axios 인스턴스를 사용합니다. `axios instance`에
-       Authorization
-     헤더를 설정하여 API 요청을 보낼 수 있습니다.
+       Authorization 헤더를 설정하여 API 요청을 보낼 수 있습니다.
 
 - **로그아웃 절차**
 
     1. **토큰 파싱 및 사용자 정보 추출**: 서버는 `Authorization` 헤더에서 `Access Token`을 추출한 후, “Bearer “ 접두어를 제거하여 실제 JWT 토큰을 파싱합니다. 이후 tokenProvider를 사용하여
-       JWT
-     토큰에서 사용자 이름(username)을 추출합니다.
+       JWT 토큰에서 사용자 이름(username)을 추출합니다.
     2. **Redis에서 Refresh Token 삭제**: 추출한 username을 키로 하여 Redis에 저장된 해당 사용자의 리프레시 토큰을 삭제합니다. 이를 통해 서버는 로그아웃한 사용자가 리프레시 토큰을 사용해 새로운 액세스 토큰을
        발급받지 못하도록 합니다.
     3. **쿠키에서 Refresh Token 삭제**: 클라이언트 측에서 사용 중인 Refresh Token을 제거하기 위해, 서버는 HttpOnly로 설정된 refreshToken 쿠키를 만료시킵니다. 이를 위해 Max-Age를 0으로

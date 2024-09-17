@@ -1,0 +1,64 @@
+#sign-in {
+    height: 2.5rem;
+    border-radius: 1rem;
+    line-height: 2rem;
+}
+
+#create-article-btn {
+    border-radius: 1rem;
+    width: 6rem;
+    margin-right: 15px;
+    height: 2.5rem
+}
+
+.container2 {
+    display: grid;
+    grid-gap: 40px;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.oswald-header {
+    font-family: "Oswald", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.card-text {
+    height: 3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toggle-list {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 1;
+}
+
+.toggle-list button {
+    display: block;
+    width: 5.5rem;
+    text-align: center;
+    font-family: sans-serif;
+    border: none;
+    background: none;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.toggle-list button:hover {
+    background-color: #e9ecef;
+}
+
+.toggle-list.visible {
+    display: block;
+}
+
+.toggle-list.hidden {
+    display: none;
+}
