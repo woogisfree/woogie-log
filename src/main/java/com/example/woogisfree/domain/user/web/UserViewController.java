@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.security.Principal;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -68,6 +70,16 @@ public class UserViewController {
         } catch (Exception e) {
             log.error("SIGN OUT ERROR : {}", e.getMessage());
             return ResponseEntity.internalServerError().body("Sign out failed");
+        }
+    }
+
+    @GetMapping("/my-page")
+    public String myPage(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/sign-in";
+        } else {
+            model.addAttribute("currentUser", userService.findUserByUsername(principal.getName()).get());
+            return "my-page";
         }
     }
 }

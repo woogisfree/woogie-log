@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>woogie-log</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="/css/header.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="header :: header"></div>
+<!--TODO 마이페이지-->
+<script>
+    function openToggle() {
+        const listElement = document.querySelector('#toggle-list');
+        if (listElement.classList.contains('hidden')) {
+            listElement.classList.remove('hidden');
+            listElement.classList.add('visible');
+        } else {
+            listElement.classList.remove('visible');
+            listElement.classList.add('hidden');
+        }
+    }
+</script>
+<script src="/js/article.js" type="module"></script>
+<script src="/js/logout.js" type="module"></script>
+</body>
+</html>
