@@ -1,7 +1,8 @@
 <div class="header">
     <header class="text-center" style="display: flex; justify-content: center; align-items: center; margin: 0 auto">
         <div style="display: flex; justify-content: space-between; width: 71rem">
-            <div class="oswald-header" style="font-size: 2.5rem">woogie-log</div>
+            <div class="oswald-header" onclick="window.location.href='/articles'" style="font-size: 2.5rem; cursor: pointer;">woogie-log
+            </div>
             <div style="display: flex; justify-content: center; align-items: center; position: relative;">
                 <div th:if="${currentUser == null}">
                     <a class="btn btn-secondary btn-sm" href="/sign-in" id="sign-in" th:if="${currentUser == null}">로그인</a>
