@@ -50,22 +50,23 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public String storeProfileImage(MultipartFile file, ApplicationUser currentUser) {
         return transactionTemplate.execute(status -> {
-            String originalFilename = getOriginalFilename(file);
-            String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-            String uniqueFilename = timestamp + "_" + UUID.randomUUID() + "_" + originalFilename;
-            Path profileImagePath = Paths.get(fileStorageProperties.getProfileImagePath()).resolve(uniqueFilename);
-
             try {
+                String originalFilename = getOriginalFilename(file);
+                String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                String uniqueFilename = timestamp + "_" + UUID.randomUUID() + "_" + originalFilename;
+                Path profileImagePath = Paths.get(fileStorageProperties.getProfileImagePath()).resolve(uniqueFilename);
+
                 Files.createDirectories(profileImagePath.getParent());
                 file.transferTo(profileImagePath.toFile());
-            } catch (IOException e) {
+
+                currentUser.setProfileImage(uniqueFilename);
+                userRepository.save(currentUser);
+                return uniqueFilename;
+            } catch (InvalidFileException | IOException e) {
                 log.error("Failed to store file", e);
+                status.setRollbackOnly();
                 throw new RuntimeException("Failed to store file", e);
             }
-
-            currentUser.setProfileImage(uniqueFilename);
-            userRepository.save(currentUser);
-            return uniqueFilename;
         });
     }
 }
