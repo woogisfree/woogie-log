@@ -42,14 +42,18 @@ public class ApplicationUser implements UserDetails {
     @Column(nullable = false)
     private UserRole role;
 
+    @Column
+    private String profileImage;
+
     @Builder
-    public ApplicationUser(String firstName, String lastName, String username, String email, String password, UserRole role) {
+    public ApplicationUser(String firstName, String lastName, String username, String email, String password, UserRole role, String profileImage) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.profileImage = profileImage;
     }
 
     @Override

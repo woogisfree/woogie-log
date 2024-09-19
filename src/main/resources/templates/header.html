@@ -9,7 +9,8 @@
                 </div>
                 <div th:if="${currentUser != null}">
                     <a class="btn btn-outline-info" href="/new-article" id="create-article-btn">글 등록하기</a>
-                    <img onclick="openToggle()" src="https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/09/18/1e586277-48ba-4e8a-9b98-d8cdbe075d86.jpg"
+                    <img onclick="openToggle()"
+                         th:src="${currentUser.profileImage != null ? currentUser.profileImage : '/profile-image/default-profile.jpg'}"
                          style="border-radius: 50%; width:2.5rem; height:2.5rem; cursor: pointer">
                     <div class="toggle-list hidden" id="toggle-list"
                          style="position:absolute; top: 3.5rem; right: -1rem; width: 7rem; height: 7rem;">

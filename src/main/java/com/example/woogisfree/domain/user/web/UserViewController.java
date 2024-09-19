@@ -75,11 +75,9 @@ public class UserViewController {
 
     @GetMapping("/my-page")
     public String myPage(Model model, Principal principal) {
-        if (principal == null) {
-            return "redirect:/sign-in";
-        } else {
-            model.addAttribute("currentUser", userService.findUserByUsername(principal.getName()).get());
-            return "my-page";
-        }
+        if (principal == null) return "redirect:/sign-in";
+
+        model.addAttribute("currentUser", userService.findUserByUsername(principal.getName()).get());
+        return "my-page";
     }
 }

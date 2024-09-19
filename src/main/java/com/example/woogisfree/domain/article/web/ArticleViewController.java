@@ -4,6 +4,7 @@ import com.example.woogisfree.domain.article.dto.ArticleSummaryResponse;
 import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import com.example.woogisfree.domain.article.dto.ArticleWithCommentResponse;
 import com.example.woogisfree.domain.article.service.ArticleService;
+import com.example.woogisfree.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import java.util.List;
 public class ArticleViewController {
 
     private final ArticleService articleService;
+    private final UserService userService;
 
     /**
      * TODO 게시글의 수가 많아지는 경우 처리
@@ -36,7 +38,7 @@ public class ArticleViewController {
         model.addAttribute("articles", articles);
 
         if (principal != null) {
-            model.addAttribute("currentUser", principal.getName());
+            model.addAttribute("currentUser", userService.findUserByUsername(principal.getName()).get());
         }
         return "articleList";
     }
