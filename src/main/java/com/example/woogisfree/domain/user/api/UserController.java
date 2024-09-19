@@ -4,8 +4,10 @@ import com.example.woogisfree.domain.user.dto.SignInRequest;
 import com.example.woogisfree.domain.user.dto.SignInResponse;
 import com.example.woogisfree.domain.user.dto.SignUpRequest;
 import com.example.woogisfree.domain.user.dto.UserResponse;
+import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.entity.UserRole;
 import com.example.woogisfree.domain.user.service.UserService;
+import com.example.woogisfree.global.common.file.FileStorageService;
 import com.example.woogisfree.global.config.redis.RedisService;
 import com.example.woogisfree.global.security.JwtToken;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -23,6 +26,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.security.Principal;
 
 @Slf4j
 @Tag(name = "User", description = "사용자 API")
@@ -33,6 +39,7 @@ public class UserController {
 
     private final UserService userService;
     private final RedisService redisService;
+    private final FileStorageService fileStorageService;
 
     @Value("${jwt.refresh-token-validity-in-milliseconds}")
     private long refreshTokenValidityInMilliseconds;
@@ -94,5 +101,19 @@ public class UserController {
     public ResponseEntity<Boolean> isLoggedIn(@AuthenticationPrincipal UserDetails userDetails) {
         boolean isLoggedIn = userDetails != null;
         return ResponseEntity.ok(isLoggedIn);
+    }
+
+    @PostMapping(value = "/users/profile-image", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadProfileImage(@RequestParam("file") MultipartFile file, Principal principal) {
+        try {
+            ApplicationUser currentUser = userService.findUserByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            String storedProfileImagePath = fileStorageService.storeProfileImage(file, currentUser);
+            log.info("Stored profile image: {}", storedProfileImagePath);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(storedProfileImagePath);
+        } catch (Exception e) {
+            log.error("Error uploading profile image", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading profile image");
+        }
     }
 }

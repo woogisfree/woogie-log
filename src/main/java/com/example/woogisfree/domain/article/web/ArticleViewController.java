@@ -4,6 +4,7 @@ import com.example.woogisfree.domain.article.dto.ArticleSummaryResponse;
 import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import com.example.woogisfree.domain.article.dto.ArticleWithCommentResponse;
 import com.example.woogisfree.domain.article.service.ArticleService;
+import com.example.woogisfree.domain.user.entity.ApplicationUser;
 import com.example.woogisfree.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +38,13 @@ public class ArticleViewController {
         List<ArticleSummaryResponse> articles = articleService.findAllByOrderByIdDesc();
         model.addAttribute("articles", articles);
 
+        //TODO 브라우저 캐싱 문제로 인한 화면에 바로 적용 안됨 문제 해결 필요, profile image path 를 날짜에 따라 분리할 필요가 있음
         if (principal != null) {
-            model.addAttribute("currentUser", userService.findUserByUsername(principal.getName()).get());
+            ApplicationUser currentUser = userService.findUserByUsername(principal.getName()).get();
+            String profileImagePath = "/profile-images/" + currentUser.getProfileImage();
+            currentUser.setProfileImage(profileImagePath);
+
+            model.addAttribute("currentUser", currentUser);
         }
         return "articleList";
     }
@@ -49,7 +55,11 @@ public class ArticleViewController {
         model.addAttribute("article", article);
 
         if (principal != null) {
-            model.addAttribute("currentUser", principal.getName());
+            ApplicationUser currentUser = userService.findUserByUsername(principal.getName()).get();
+            String profileImagePath = "/profile-images/" + currentUser.getProfileImage();
+            currentUser.setProfileImage(profileImagePath);
+
+            model.addAttribute("currentUser", currentUser);
         }
         return "article";
     }
