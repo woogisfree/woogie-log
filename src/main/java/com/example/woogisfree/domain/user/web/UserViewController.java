@@ -4,6 +4,7 @@ import com.example.woogisfree.domain.user.dto.SignUpRequest;
 import com.example.woogisfree.domain.user.service.UserService;
 import com.example.woogisfree.global.config.redis.RedisService;
 import com.example.woogisfree.global.security.TokenProvider;
+import com.example.woogisfree.global.util.UserUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -28,6 +29,7 @@ public class UserViewController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final RedisService redisService;
+    private final UserUtil userUtil;
 
     @GetMapping("/sign-up")
     public String signUp(Model model) {
@@ -77,7 +79,7 @@ public class UserViewController {
     public String myPage(Model model, Principal principal) {
         if (principal == null) return "redirect:/sign-in";
 
-        model.addAttribute("currentUser", userService.findUserByUsername(principal.getName()).get());
+        userUtil.addCurrentUserToModel(model, principal);
         return "my-page";
     }
 }

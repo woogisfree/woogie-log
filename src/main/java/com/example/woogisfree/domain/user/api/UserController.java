@@ -103,17 +103,31 @@ public class UserController {
         return ResponseEntity.ok(isLoggedIn);
     }
 
-    @PostMapping(value = "/users/profile-image", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/profile-image", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadProfileImage(@RequestParam("file") MultipartFile file, Principal principal) {
         try {
-            ApplicationUser currentUser = userService.findUserByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            ApplicationUser currentUser = userService.findUserByUsername(principal.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             String storedProfileImagePath = fileStorageService.storeProfileImage(file, currentUser);
-            log.info("Stored profile image: {}", storedProfileImagePath);
+            log.info("Stored profile image={}", storedProfileImagePath);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(storedProfileImagePath);
         } catch (Exception e) {
             log.error("Error uploading profile image", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading profile image");
+        }
+    }
+
+    @DeleteMapping("/profile-image")
+    public ResponseEntity<String> deleteProfileImage(Principal principal) {
+        try {
+            ApplicationUser currentUser = userService.findUserByUsername(principal.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            fileStorageService.deleteProfileImage(currentUser);
+            return ResponseEntity.ok("Profile image deleted successfully");
+        } catch (Exception e) {
+            log.error("Error deleting profile image", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete profile image");
         }
     }
 }

@@ -4,8 +4,7 @@ import com.example.woogisfree.domain.article.dto.ArticleSummaryResponse;
 import com.example.woogisfree.domain.article.dto.ArticleViewResponse;
 import com.example.woogisfree.domain.article.dto.ArticleWithCommentResponse;
 import com.example.woogisfree.domain.article.service.ArticleService;
-import com.example.woogisfree.domain.user.entity.ApplicationUser;
-import com.example.woogisfree.domain.user.service.UserService;
+import com.example.woogisfree.global.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,13 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.util.List;
 
+
 @Slf4j
 @RequiredArgsConstructor
 @Controller
 public class ArticleViewController {
 
     private final ArticleService articleService;
-    private final UserService userService;
+    private final UserUtil userUtil;
 
     /**
      * TODO 게시글의 수가 많아지는 경우 처리
@@ -37,15 +37,7 @@ public class ArticleViewController {
     public String getArticles(Model model, Principal principal) {
         List<ArticleSummaryResponse> articles = articleService.findAllByOrderByIdDesc();
         model.addAttribute("articles", articles);
-
-        //TODO 브라우저 캐싱 문제로 인한 화면에 바로 적용 안됨 문제 해결 필요, profile image path 를 날짜에 따라 분리할 필요가 있음
-        if (principal != null) {
-            ApplicationUser currentUser = userService.findUserByUsername(principal.getName()).get();
-            String profileImagePath = "/profile-images/" + currentUser.getProfileImage();
-            currentUser.setProfileImage(profileImagePath);
-
-            model.addAttribute("currentUser", currentUser);
-        }
+        userUtil.addCurrentUserToModel(model, principal);
         return "articleList";
     }
 
@@ -54,13 +46,7 @@ public class ArticleViewController {
         ArticleWithCommentResponse article = articleService.findById(id);
         model.addAttribute("article", article);
 
-        if (principal != null) {
-            ApplicationUser currentUser = userService.findUserByUsername(principal.getName()).get();
-            String profileImagePath = "/profile-images/" + currentUser.getProfileImage();
-            currentUser.setProfileImage(profileImagePath);
-
-            model.addAttribute("currentUser", currentUser);
-        }
+        userUtil.addCurrentUserToModel(model, principal);
         return "article";
     }
 
