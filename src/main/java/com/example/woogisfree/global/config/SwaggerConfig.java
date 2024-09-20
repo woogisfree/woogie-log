@@ -15,18 +15,17 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .components(new Components()
-                        .addSecuritySchemes("bearerAuth",
-                                new SecurityScheme()
+                        .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")))
                 .info(apiInfo())
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"));
     }
 
     public Info apiInfo() {
         return new Info()
-                .title("Woogie's Toy")
+                .title("woogie-log")
                 .version("1.0.0");
     }
 }
