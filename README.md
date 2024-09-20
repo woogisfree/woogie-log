@@ -79,7 +79,43 @@
     3. **쿠키에서 Refresh Token 삭제**: 클라이언트 측에서 사용 중인 Refresh Token을 제거하기 위해, 서버는 HttpOnly로 설정된 refreshToken 쿠키를 만료시킵니다. 이를 위해 Max-Age를 0으로
        설정하고,쿠키를 클라이언트로 전달합니다. 이렇게 하면 클라이언트 브라우저에 있는 refreshToken이 삭제됩니다.
 
-  <!--
+<br>
+
+### 마이페이지 기능
+
+- **프로필 이미지 업로드 및 변경 절차**
+
+    1. **파일 유효성 검사**: 업로드된 파일의 확장자를 확인하여 허용된 이미지 포맷(JPG, JPEG, PNG)인지 검증합니다.
+    2. **파일 저장**: 프로필 이미지를 저장할 파일 경로를 구성합니다. UUID와 타임스탬프를 사용하여 파일 이름을 고유하게 생성합니다. 생성된 파일 경로에 이미지를 저장합니다.
+    3. **기존 프로필 이미지 제거**: 사용자의 기존 프로필 이미지가 존재하는 경우, 이전 이미지를 삭제합니다.
+    4. **사용자 정보 업데이트**: 새로 업로드된 프로필 이미지의 파일 이름을 사용자 엔티티의 profileImage 필드에 저장하고, 사용자 정보를 데이터베이스에 업데이트합니다.
+
+  이 모든 과정은 transactionTemplate을 사용하여 하나의 트랜잭션으로 묶입니다. 트랜잭션 내에서 파일 저장, 기존 이미지 삭제, 사용자 정보 업데이트를 수행하여 데이터의 일관성과 원자성을 보장합니다. 트랜잭션 처리를 통해 중간에 오류가
+  발생하더라도 모든 작업이 원자적으로 처리되며, 실패 시 롤백이 이루어집니다.
+
+  ```java
+  @Override
+  public String storeProfileImage(MultipartFile file, ApplicationUser currentUser) {
+    return transactionTemplate.execute(status -> {
+        try {
+            // 파일 저장 및 처리 로직
+            // ...
+        } catch (InvalidFileException | IOException e) {
+            log.error("Failed to store file", e);
+            status.setRollbackOnly();
+            throw new RuntimeException("Failed to store file", e);
+        }
+    });
+  }
+  ```
+
+- **프로필 이미지 삭제 절차**
+
+    1. **기존 프로필 이미지 존재 여부 확인**: 사용자 계정의 profileImage 필드에서 현재 설정된 프로필 이미지 파일 이름을 확인합니다. 프로필 이미지가 설정되어 있지 않다면, 삭제 작업은 수행되지 않습니다.
+    2. **파일 시스템에서 이미지 삭제**: 프로필 이미지 파일의 저장 경로를 구성합니다. 파일 시스템에서 해당 경로의 파일이 존재하면 삭제합니다.
+    3. **사용자 엔티티 업데이트**: 사용자 엔티티의 profileImage 필드를 null로 설정합니다. 변경된 사용자 정보를 데이터베이스에 저장하여 프로필 이미지 삭제를 반영합니다.
+
+    <!--
 
 ### 게시글 관리
 
